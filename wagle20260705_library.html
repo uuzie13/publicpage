@@ -1,0 +1,278 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>인사이드 아웃 독서 기억구슬 보관방</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #fdfbf7;
+            color: #37352f;
+            padding: 15px;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+        .vending-machine, .storage-room {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #edece9;
+            width: 100%;
+            max-width: 340px;
+            box-sizing: border-box;
+        }
+        h3 {
+            margin-top: 0;
+            margin-bottom: 5px;
+            text-align: center;
+            font-size: 16px;
+            color: #222;
+        }
+        .subtitle {
+            font-size: 12px;
+            color: #888;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        /* 책 제목 적는 곳 디자인 */
+        .book-title-container {
+            margin-bottom: 15px;
+        }
+        .book-title-input {
+            width: 100%;
+            border: none;
+            border-bottom: 2px solid #edece9;
+            padding: 6px 4px;
+            font-size: 14px;
+            font-weight: 600;
+            text-align: center;
+            color: #222;
+            background-color: transparent;
+            box-sizing: border-box;
+        }
+        .book-title-input:focus {
+            outline: none;
+            border-bottom-color: #37352f;
+        }
+        /* 구슬 나오는 투명 유리 존 */
+        .display-zone {
+            height: 120px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(circle, #f9f9f6 0%, #edece9 100%);
+            border-radius: 12px;
+            margin-bottom: 15px;
+            position: relative;
+            border: 1px dashed #d3d2ce;
+        }
+        .marble {
+            width: 75px;
+            height: 75px;
+            border-radius: 50%;
+            background: #f0f0f0;
+            box-shadow: inset -8px -8px 20px rgba(0,0,0,0.15), inset 8px 8px 15px rgba(255,255,255,0.7);
+            transition: all 0.4s ease;
+            transform: scale(0);
+            position: relative;
+        }
+        .marble.active { transform: scale(1); }
+        .marble::after {
+            content: ''; position: absolute; top: 10px; left: 10px; width: 18px; height: 10px;
+            background: rgba(255, 255, 255, 0.6); border-radius: 50%; transform: rotate(-15deg); filter: blur(0.5px);
+        }
+        /* 감정 그리드 버튼 설정 */
+        .emotion-grid {
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin-bottom: 15px;
+        }
+        .emotion-item input { display: none; }
+        .emotion-item label {
+            display: flex; align-items: center; padding: 6px 8px; border-radius: 8px;
+            border: 1px solid #edece9; font-size: 12px; cursor: pointer; background: #fff;
+        }
+        .emotion-item input:checked + label { font-weight: bold; color: #fff; border-color: transparent; }
+        
+        .emo-joy label { border-left: 3px solid #ffd700; } .emo-joy input:checked + label { background-color: #ffd700; color: #333; }
+        .emo-sad label { border-left: 3px solid #4a90e2; } .emo-sad input:checked + label { background-color: #4a90e2; }
+        .emo-anger label { border-left: 3px solid #e15b64; } .emo-anger input:checked + label { background-color: #e15b64; }
+        .emo-fear label { border-left: 3px solid #a370f7; } .emo-fear input:checked + label { background-color: #a370f7; }
+        .emo-disgust label { border-left: 3px solid #5cb85c; } .emo-disgust input:checked + label { background-color: #5cb85c; }
+        .emo-touch label { border-left: 3px solid #ff7675; } .emo-touch input:checked + label { background-color: #ff7675; }
+        .emo-cozy label { border-left: 3px solid #e1b12c; } .emo-cozy input:checked + label { background-color: #e1b12c; }
+        .emo-curious label { border-left: 3px solid #00cec9; } .emo-curious input:checked + label { background-color: #00cec9; }
+        .emo-empty label { border-left: 3px solid #636e72; } .emo-empty input:checked + label { background-color: #636e72; }
+        .emo-love label { border-left: 3px solid #fd79a8; } .emo-love input:checked + label { background-color: #fd79a8; }
+
+        .btn-group { display: flex; gap: 8px; }
+        .btn {
+            flex: 1; padding: 10px; border: none; border-radius: 8px; font-size: 13px; font-weight: bold; cursor: pointer; transition: all 0.2s;
+        }
+        .btn-dispense { background: #37352f; color: #fff; }
+        .btn-save { background: #ffb300; color: #fff; display: none; }
+        .btn:disabled { background: #e2e1de; color: #a09f9c; cursor: not-allowed; }
+
+        /* 장기 기억 보관방 디자인 */
+        .storage-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 15px; min-height: 50px;
+        }
+        .saved-marble-box {
+            display: flex; flex-direction: column; align-items: center; gap: 4px; position: relative; cursor: pointer;
+        }
+        .mini-marble {
+            width: 45px; height: 45px; border-radius: 50%; box-shadow: inset -5px -5px 12px rgba(0,0,0,0.2), inset 5px 5px 10px rgba(255,255,255,0.6), 0 4px 8px rgba(0,0,0,0.1);
+            position: relative; transition: transform 0.2s;
+        }
+        .mini-marble:hover { transform: scale(1.1); }
+        .mini-marble::after {
+            content: ''; position: absolute; top: 6px; left: 6px; width: 10px; height: 5px; background: rgba(255, 255, 255, 0.6); border-radius: 50%; transform: rotate(-15deg);
+        }
+        .saved-title {
+            font-size: 10px; text-align: center; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #555;
+            font-weight: 500;
+        }
+        /* 구슬 삭제 버튼 */
+        .delete-btn {
+            position: absolute; top: -4px; right: -4px; width: 14px; height: 14px; background: rgba(0,0,0,0.6); color: #fff; border-radius: 50%; font-size: 9px; line-height: 14px; text-align: center; display: none;
+        }
+        .saved-marble-box:hover .delete-btn { display: block; }
+    </style>
+</head>
+<body>
+
+<div class="vending-machine">
+    <h3>🔮 기억구슬 자판기</h3>
+    <div class="subtitle">감정을 고르고 구슬을 제조하세요!</div>
+    
+    <div class="book-title-container">
+        <input type="text" id="bookTitle" class="book-title-input" placeholder="📖 책 제목을 입력하세요" maxlength="30">
+    </div>
+    
+    <div class="display-zone">
+        <div id="marbleEffect" class="marble"></div>
+    </div>
+    
+    <div class="emotion-grid">
+        <div class="emotion-item emo-joy"><input type="checkbox" id="emo1" value="#ffd700" onchange="checkLimit(this)"><label for="emo1">💛 기쁨/유쾌</label></div>
+        <div class="emotion-item emo-sad"><input type="checkbox" id="emo2" value="#4a90e2" onchange="checkLimit(this)"><label for="emo2">💙 슬픔/여운</label></div>
+        <div class="emotion-item emo-anger"><input type="checkbox" id="emo3" value="#e15b64" onchange="checkLimit(this)"><label for="emo3">❤️ 분노/답답</label></div>
+        <div class="emotion-item emo-fear"><input type="checkbox" id="emo4" value="#a370f7" onchange="checkLimit(this)"><label for="emo4">💜 스릴/소름</label></div>
+        <div class="emotion-item emo-disgust"><input type="checkbox" id="emo5" value="#5cb85c" onchange="changeLimit(this)"><label for="emo5">💚 까칠/찝찝</label></div>
+        <div class="emotion-item emo-touch"><input type="checkbox" id="emo6" value="#ff7675" onchange="checkLimit(this)"><label for="emo6">🌸 뭉클/감동</label></div>
+        <div class="emotion-item emo-cozy"><input type="checkbox" id="emo7" value="#e1b12c" onchange="checkLimit(this)"><label for="emo7">🧡 포근/힐링</label></div>
+        <div class="emotion-item emo-curious"><input type="checkbox" id="emo8" value="#00cec9" onchange="checkLimit(this)"><label for="emo8">🩵 깨달음/지식</label></div>
+        <div class="emotion-item emo-empty"><input type="checkbox" id="emo9" value="#636e72" onchange="checkLimit(this)"><label for="emo9">🩶 허무/씁쓸</label></div>
+        <div class="emotion-item emo-love"><input type="checkbox" id="emo10" value="#fd79a8" onchange="checkLimit(this)"><label for="emo10">💖 설렘/달달</label></div>
+    </div>
+    
+    <div class="btn-group">
+        <button id="dispenseBtn" class="btn btn-dispense" onclick="generateMarble()" disabled>구슬 제조 🌟</button>
+        <button id="saveBtn" class="btn btn-save" onclick="saveMarble()">보관방 저장 📥</button>
+    </div>
+</div>
+
+<div class="storage-room">
+    <h3>🌌 장기 기억 보관방</h3>
+    <div class="subtitle">언니가 읽은 책의 감정들이 누적되는 방이에요</div>
+    <div id="storageGrid" class="storage-grid"></div>
+</div>
+
+<script>
+    let currentGradient = '';
+    let currentShadow = '';
+
+    function checkLimit(checkbox) {
+        const checkboxes = document.querySelectorAll('.emotion-grid input[type="checkbox"]');
+        const checkedCount = Array.from(checkboxes).filter(i => i.checked).length;
+        if (checkedCount > 3) {
+            checkbox.checked = false;
+            alert("감정은 최대 3개까지만 고를 수 있어요 언니!");
+            return;
+        }
+        document.getElementById('dispenseBtn').disabled = !(checkedCount >= 2 && checkedCount <= 3);
+    }
+
+    function generateMarble() {
+        const checkboxes = document.querySelectorAll('.emotion-grid input[type="checkbox"]');
+        const selectedColors = Array.from(checkboxes).filter(i => i.checked).map(i => i.value);
+        const marble = document.getElementById('marbleEffect');
+        
+        marble.classList.remove('active');
+        
+        setTimeout(() => {
+            if (selectedColors.length === 2) {
+                currentGradient = `linear-gradient(135deg, ${selectedColors[0]} 0%, ${selectedColors[1]} 100%)`;
+                currentShadow = `inset -12px -12px 25px rgba(0,0,0,0.25), inset 10px 10px 20px rgba(255,255,255,0.7), 0 0 20px ${selectedColors[0]}55, 0 0 20px ${selectedColors[1]}55`;
+            } else {
+                currentGradient = `linear-gradient(135deg, ${selectedColors[0]} 0%, ${selectedColors[1]} 50%, ${selectedColors[2]} 100%)`;
+                currentShadow = `inset -12px -12px 25px rgba(0,0,0,0.25), inset 10px 10px 20px rgba(255,255,255,0.7), 0 0 20px ${selectedColors[0]}66, 0 0 20px ${selectedColors[2]}66`;
+            }
+            marble.style.background = currentGradient;
+            marble.style.boxShadow = currentShadow;
+            marble.classList.add('active');
+            document.getElementById('saveBtn').style.display = 'block'; // 저장 버튼 노출
+        }, 100);
+    }
+
+    // 로컬 스토리지에 구슬 영구 저장하는 함수
+    function saveMarble() {
+        const titleInput = document.getElementById('bookTitle');
+        const title = titleInput.value.trim() || "무제의 기억";
+        
+        const newMarble = { title: title, gradient: currentGradient, shadow: currentShadow, id: Date.now() };
+        let saved = JSON.parse(localStorage.getItem('notion_book_marbles') || '[]');
+        saved.push(newMarble);
+        localStorage.setItem('notion_book_marbles', JSON.stringify(saved));
+        
+        loadStorage(); // 보관방 새로고침
+        
+        // 입력 폼 초기화하기
+        titleInput.value = '';
+        document.getElementById('marbleEffect').classList.remove('active');
+        document.getElementById('saveBtn').style.display = 'none';
+        document.querySelectorAll('.emotion-grid input[type="checkbox"]').forEach(i => i.checked = false);
+        document.getElementById('dispenseBtn').disabled = true;
+    }
+
+    // 구슬 버리기 함수
+    function deleteMarble(id, e) {
+        e.stopPropagation();
+        if(confirm("이 기억구슬을 보관방에서 영구 삭제할까요 언니?")) {
+            let saved = JSON.parse(localStorage.getItem('notion_book_marbles') || '[]');
+            saved = saved.filter(m => m.id !== id);
+            localStorage.setItem('notion_book_marbles', JSON.stringify(saved));
+            loadStorage();
+        }
+    }
+
+    // 보관방에 저장된 구슬 불러와서 띄워주는 함수
+    function loadStorage() {
+        const grid = document.getElementById('storageGrid');
+        grid.innerHTML = '';
+        let saved = JSON.parse(localStorage.getItem('notion_book_marbles') || '[]');
+        
+        saved.forEach(m => {
+            const box = document.createElement('div');
+            box.className = 'saved-marble-box';
+            box.title = m.title;
+            box.onclick = () => alert(`🔮 기억구슬 도서명: [${m.title}]`);
+            
+            box.innerHTML = `
+                <div class="mini-marble" style="background: ${m.gradient};"></div>
+                <div class="saved-title">${m.title}</div>
+                <div class="delete-btn" onclick="deleteMarble(${m.id}, event)">×</div>
+            `;
+            grid.appendChild(box);
+        });
+    }
+
+    // 처음 로딩될 때 보관함 열기
+    window.onload = loadStorage;
+</script>
+
+</body>
+</html>
