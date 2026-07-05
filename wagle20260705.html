@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>노션 독서 별점 계산기</title>
+    <title>노션 독서 10점 만점 계산기</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -24,12 +24,31 @@
             width: 100%;
             max-width: 340px;
         }
-        h3 {
-            margin-top: 0;
-            margin-bottom: 18px;
+        .book-title-container {
+            margin-bottom: 20px;
             text-align: center;
+        }
+        .book-title-input {
+            width: 100%;
+            border: none;
+            border-bottom: 2px solid #edece9;
+            padding: 8px 4px;
             font-size: 16px;
+            font-weight: 600;
+            text-align: center;
             color: #222;
+            background-color: transparent;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+        .book-title-input:focus {
+            outline: none;
+            border-bottom-color: #e15b64;
+        }
+        .book-title-input::placeholder {
+            color: #b5b5b5;
+            font-weight: normal;
+            font-size: 14px;
         }
         .rating-row {
             display: flex;
@@ -44,7 +63,6 @@
             align-items: center;
             gap: 6px;
         }
-        /* 별점 스타일 */
         .star-rating {
             display: flex;
             flex-direction: row-reverse;
@@ -69,18 +87,20 @@
             color: #eee;
             line-height: 28px;
         }
-        /* 반쪽 별 설정 */
         .star-rating label.half::before {
             width: 14px;
         }
-        /* 가득찬 별 설정 */
         .star-rating label.full::before {
             left: -14px;
             width: 28px;
         }
-        /* 마우스 오버 및 체크 시 불 들어오는 로직 */
+        /* 일반 항목 별 색상 (노란색) */
         .star-rating input:checked ~ label::before {
             color: #ffb300;
+        }
+        /* 인생낭비도 경고용 별 색상 (붉은 톤 코랄색) */
+        .star-rating.waste-stars input:checked ~ label::before {
+            color: #f76c6c;
         }
         .result-box {
             margin-top: 18px;
@@ -94,7 +114,7 @@
             margin-bottom: 3px;
         }
         .score {
-            font-size: 36px;
+            font-size: 42px;
             font-weight: bold;
             color: #e15b64;
         }
@@ -103,14 +123,21 @@
             color: #37352f;
             font-weight: normal;
         }
+        .max-notice {
+            font-size: 11px;
+            color: #a0a0a0;
+            margin-top: 4px;
+            line-height: 1.4;
+        }
     </style>
 </head>
 <body>
 
 <div class="calculator-container">
-    <h3>📚 터치 별점 계산기</h3>
+    <div class="book-title-container">
+        <input type="text" class="book-title-input" placeholder="📖 읽은 책 제목을 입력하세요" maxlength="40">
+    </div>
     
-    <!-- 항목 1 -->
     <div class="rating-row">
         <span class="label">📖 페이지</span>
         <div class="star-rating" data-category="page">
@@ -127,7 +154,6 @@
         </div>
     </div>
 
-    <!-- 항목 2 -->
     <div class="rating-row">
         <span class="label">😆 도파민</span>
         <div class="star-rating" data-category="dopamine">
@@ -144,7 +170,6 @@
         </div>
     </div>
 
-    <!-- 항목 3 -->
     <div class="rating-row">
         <span class="label">💖 여운</span>
         <div class="star-rating" data-category="lingering">
@@ -161,7 +186,6 @@
         </div>
     </div>
 
-    <!-- 항목 4 -->
     <div class="rating-row">
         <span class="label">🤔 성취/통찰</span>
         <div class="star-rating" data-category="insight">
@@ -178,27 +202,25 @@
         </div>
     </div>
 
-    <!-- 항목 5 -->
     <div class="rating-row">
-        <span class="label">✍️ 문장력</span>
-        <div class="star-rating" data-category="writing">
-            <input type="radio" name="writing" id="writing-5" value="5" onclick="calculate()"><label class="full" for="writing-5"></label>
-            <input type="radio" name="writing" id="writing-4.5" value="4.5" onclick="calculate()"><label class="half" for="writing-4.5"></label>
-            <input type="radio" name="writing" id="writing-4" value="4" onclick="calculate()"><label class="full" for="writing-4"></label>
-            <input type="radio" name="writing" id="writing-3.5" value="3.5" onclick="calculate()"><label class="half" for="writing-3.5"></label>
-            <input type="radio" name="writing" id="writing-3" value="3" onclick="calculate()"><label class="full" for="writing-3"></label>
-            <input type="radio" name="writing" id="writing-2.5" value="2.5" onclick="calculate()"><label class="half" for="writing-2.5"></label>
-            <input type="radio" name="writing" id="writing-2" value="2" onclick="calculate()"><label class="full" for="writing-2"></label>
-            <input type="radio" name="writing" id="writing-1.5" value="1.5" onclick="calculate()"><label class="half" for="writing-1.5"></label>
-            <input type="radio" name="writing" id="writing-1" value="1" onclick="calculate()"><label class="full" for="writing-1"></label>
-            <input type="radio" name="writing" id="writing-0.5" value="0.5" onclick="calculate()"><label class="half" for="writing-0.5"></label>
+        <span class="label">🎨 작품성</span>
+        <div class="star-rating" data-category="artwork">
+            <input type="radio" name="artwork" id="artwork-5" value="5" onclick="calculate()"><label class="full" for="artwork-5"></label>
+            <input type="radio" name="artwork" id="artwork-4.5" value="4.5" onclick="calculate()"><label class="half" for="artwork-4.5"></label>
+            <input type="radio" name="artwork" id="artwork-4" value="4" onclick="calculate()"><label class="full" for="artwork-4"></label>
+            <input type="radio" name="artwork" id="artwork-3.5" value="3.5" onclick="calculate()"><label class="half" for="artwork-3.5"></label>
+            <input type="radio" name="artwork" id="artwork-3" value="3" onclick="calculate()"><label class="full" for="artwork-3"></label>
+            <input type="radio" name="artwork" id="artwork-2.5" value="2.5" onclick="calculate()"><label class="half" for="artwork-2.5"></label>
+            <input type="radio" name="artwork" id="artwork-2" value="2" onclick="calculate()"><label class="full" for="artwork-2"></label>
+            <input type="radio" name="artwork" id="artwork-1.5" value="1.5" onclick="calculate()"><label class="half" for="artwork-1.5"></label>
+            <input type="radio" name="artwork" id="artwork-1" value="1" onclick="calculate()"><label class="full" for="artwork-1"></label>
+            <input type="radio" name="artwork" id="artwork-0.5" value="0.5" onclick="calculate()"><label class="half" for="artwork-0.5"></label>
         </div>
     </div>
 
-    <!-- 항목 6 -->
     <div class="rating-row">
         <span class="label">🗑️ 인생낭비도</span>
-        <div class="star-rating" data-category="waste">
+        <div class="star-rating waste-stars" data-category="waste">
             <input type="radio" name="waste" id="waste-5" value="5" onclick="calculate()"><label class="full" for="waste-5"></label>
             <input type="radio" name="waste" id="waste-4.5" value="4.5" onclick="calculate()"><label class="half" for="waste-4.5"></label>
             <input type="radio" name="waste" id="waste-4" value="4" onclick="calculate()"><label class="full" for="waste-4"></label>
@@ -213,27 +235,39 @@
     </div>
 
     <div class="result-box">
-        <div class="result-title">총점 (별 1개 = 5점 계산)</div>
-        <div class="score"><span id="totalScore">0</span><span class="score-unit">점</span></div>
+        <div class="result-title">최종 환산 점수</div>
+        <div class="score"><span id="totalScore">1.7</span><span class="score-unit"> / 10</span></div>
+        <div class="max-notice">※ '인생낭비도'는 별이 적을수록 점수가 높아집니다.<br>(아무것도 안 누르면 인생낭비도 0개=5점 처리되어 기본 1.7점에서 시작해요!)</div>
     </div>
 </div>
 
 <script>
     function calculate() {
-        const categories = ['page', 'dopamine', 'lingering', 'insight', 'writing', 'waste'];
+        const regularCategories = ['page', 'dopamine', 'lingering', 'insight', 'artwork'];
         let totalStars = 0;
 
-        categories.forEach(cat => {
+        // 1. 일반 5개 항목 합산 (별 많을수록 고득점)
+        regularCategories.forEach(cat => {
             const checkedRadio = document.querySelector(`input[name="${cat}"]:checked`);
             if (checkedRadio) {
                 totalStars += parseFloat(checkedRadio.value);
             }
         });
 
-        // 총 점수 = 선택된 총 별 개수 * 5점
-        const finalScore = totalStars * 5;
-        document.getElementById('totalScore').innerText = Number(finalScore.toFixed(1));
+        // 2. 인생낭비도 계산 (별 적을수록 고득점: 5 - 선택한별)
+        const wasteRadio = document.querySelector(`input[name="waste"]:checked`);
+        const wasteStars = wasteRadio ? parseFloat(wasteRadio.value) : 0;
+        const wasteScore = 5 - wasteStars; 
+        
+        totalStars += wasteScore;
+
+        // 30성 만점을 10점 만점으로 변환
+        const finalScore = (totalStars * 10) / 30;
+        document.getElementById('totalScore').innerText = finalScore.toFixed(1);
     }
+    
+    // 페이지 처음 켜졌을 때 기본값 계산 반영
+    calculate();
 </script>
 
 </body>
