@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>독서 점수 계산기</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #fdfbf7;
+            color: #37352f;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            margin: 0;
+        }
+        .calculator-container {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border: 1px solid #edece9;
+            width: 100%;
+            max-width: 320px;
+        }
+        h3 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 18px;
+            color: #222;
+        }
+        .input-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        label {
+            font-size: 14px;
+            font-weight: 500;
+        }
+        input[type="number"] {
+            width: 70px;
+            padding: 6px 8px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            text-align: center;
+        }
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #2383e2;
+        }
+        .result-box {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 2px dashed #edece9;
+            text-align: center;
+        }
+        .result-title {
+            font-size: 13px;
+            color: #777;
+            margin-bottom: 5px;
+        }
+        .score {
+            font-size: 32px;
+            font-weight: bold;
+            color: #e15b64;
+        }
+        .score-unit {
+            font-size: 18px;
+            color: #37352f;
+            font-weight: normal;
+        }
+        .tip {
+            font-size: 11px;
+            color: #a0a0a0;
+            text-align: center;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="calculator-container">
+    <h3>📚 독서 점수 계산기</h3>
+    
+    <div class="input-group">
+        <label>⭐ 온전한 별 개수 (5점)</label>
+        <input type="number" id="fullStars" min="0" value="0" step="1" oninput="calculateScore()">
+    </div>
+    <div class="input-group">
+        <label>🌗 반 쪽 별 개수 (2.5점)</label>
+        <input type="number" id="halfStars" min="0" value="0" step="1" oninput="calculateScore()">
+    </div>
+
+    <div class="result-box">
+        <div class="result-title">총점</div>
+        <div class="score"><span id="totalScore">0</span><span class="score-unit">점</span></div>
+    </div>
+    <div class="tip">숫자를 입력하면 실시간으로 계산돼요!</div>
+</div>
+
+<script>
+    function calculateScore() {
+        const fullStars = parseFloat(document.getElementById('fullStars').value) || 0;
+        const halfStars = parseFloat(document.getElementById('halfStars').value) || 0;
+        
+        // 별 하나당 5점, 반 개당 2.5점 계산
+        const total = (fullStars * 5) + (halfStars * 2.5);
+        
+        // 소수점 깔끔하게 처리해서 보여주기
+        document.getElementById('totalScore').innerText = Number(total.toFixed(1));
+    }
+</script>
+
+</body>
+</html>
