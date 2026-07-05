@@ -1,0 +1,292 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>인사이드 아웃 독서 기억구슬 자판기</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #fdfbf7;
+            color: #37352f;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+            margin: 0;
+        }
+        .vending-machine {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #edece9;
+            width: 100%;
+            max-width: 340px;
+            box-sizing: border-box;
+        }
+        h3 {
+            margin-top: 0;
+            margin-bottom: 5px;
+            text-align: center;
+            font-size: 16px;
+            color: #222;
+        }
+        .subtitle {
+            font-size: 12px;
+            color: #888;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        /* 구슬 디스플레이 존 */
+        .display-zone {
+            height: 140px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(circle, #f9f9f6 0%, #edece9 100%);
+            border-radius: 12px;
+            margin-bottom: 20px;
+            position: relative;
+            border: 1px dashed #d3d2ce;
+            overflow: hidden;
+        }
+        /* 영롱한 기억구슬 3D 스타일 */
+        .marble {
+            width: 85px;
+            height: 85px;
+            border-radius: 50%;
+            background: #f0f0f0;
+            box-shadow: 
+                inset -10px -10px 25px rgba(0,0,0,0.15), 
+                inset 10px 10px 20px rgba(255,255,255,0.7),
+                0 6px 15px rgba(0,0,0,0.1);
+            transition: background 0.6s ease, box-shadow 0.6s ease, transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform: scale(0);
+        }
+        .marble.active {
+            transform: scale(1);
+        }
+        /* 구슬 표면 입체 하이라이트 광택 */
+        .marble::after {
+            content: '';
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            width: 22px;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            transform: rotate(-15deg);
+            filter: blur(0.5px);
+        }
+        /* 감정 체크박스 그리드 설정 */
+        .emotion-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+        .emotion-item input {
+            display: none;
+        }
+        .emotion-item label {
+            display: flex;
+            align-items: center;
+            padding: 8px 10px;
+            border-radius: 8px;
+            border: 1px solid #edece9;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: #fff;
+        }
+        /* 선택 시 도톰하게 불 들어오는 연출 */
+        .emotion-item input:checked + label {
+            font-weight: bold;
+            color: #fff;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            border-color: transparent;
+        }
+        /* 10가지 감정 고유 보더 및 체크 색상 */
+        .emo-joy label { border-left: 4px solid #ffd700; } 
+        .emo-joy input:checked + label { background-color: #ffd700; color: #333; }
+        
+        .emo-sad label { border-left: 4px solid #4a90e2; } 
+        .emo-sad input:checked + label { background-color: #4a90e2; }
+        
+        .emo-anger label { border-left: 4px solid #e15b64; } 
+        .emo-anger input:checked + label { background-color: #e15b64; }
+        
+        .emo-fear label { border-left: 4px solid #a370f7; } 
+        .emo-fear input:checked + label { background-color: #a370f7; }
+        
+        .emo-disgust label { border-left: 4px solid #5cb85c; } 
+        .emo-disgust input:checked + label { background-color: #5cb85c; }
+        
+        .emo-touch label { border-left: 4px solid #ff7675; } 
+        .emo-touch input:checked + label { background-color: #ff7675; }
+        
+        .emo-cozy label { border-left: 4px solid #e1b12c; } 
+        .emo-cozy input:checked + label { background-color: #e1b12c; }
+        
+        .emo-curious label { border-left: 4px solid #00cec9; } 
+        .emo-curious input:checked + label { background-color: #00cec9; }
+        
+        .emo-empty label { border-left: 4px solid #636e72; } 
+        .emo-empty input:checked + label { background-color: #636e72; }
+        
+        .emo-love label { border-left: 4px solid #fd79a8; } 
+        .emo-love input:checked + label { background-color: #fd79a8; }
+
+        /* 자판기 버튼 스타일 */
+        .btn-dispense {
+            width: 100%;
+            padding: 12px;
+            background: #37352f;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-dispense:hover {
+            background: #222;
+        }
+        .btn-dispense:disabled {
+            background: #e2e1de;
+            color: #a09f9c;
+            cursor: not-allowed;
+        }
+        .counter-text {
+            font-size: 11px;
+            text-align: center;
+            margin-top: 8px;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+
+<div class="vending-machine">
+    <h3>🔮 책 기억구슬 제조기</h3>
+    <div class="subtitle">독후 감정을 2~3개 고르고 구슬을 뽑아보세요!</div>
+    
+    <div class="display-zone">
+        <div id="marbleEffect" class="marble"></div>
+    </div>
+    
+    <div class="emotion-grid">
+        <div class="emotion-item emo-joy">
+            <input type="checkbox" id="emo1" value="#ffd700" onchange="checkLimit(this)">
+            <label for="emo1">💛 기쁨/유쾌</label>
+        </div>
+        <div class="emotion-item emo-sad">
+            <input type="checkbox" id="emo2" value="#4a90e2" onchange="checkLimit(this)">
+            <label for="emo2">💙 슬픔/여운</label>
+        </div>
+        <div class="emotion-item emo-anger">
+            <input type="checkbox" id="emo3" value="#e15b64" onchange="checkLimit(this)">
+            <label for="emo3">❤️ 분노/답답</label>
+        </div>
+        <div class="emotion-item emo-fear">
+            <input type="checkbox" id="emo4" value="#a370f7" onchange="checkLimit(this)">
+            <label for="emo4">💜 스릴/소름</label>
+        </div>
+        <div class="emotion-item emo-disgust">
+            <input type="checkbox" id="emo5" value="#5cb85c" onchange="checkLimit(this)">
+            <label for="emo5">💚 까칠/찝찝</label>
+        </div>
+        <div class="emotion-item emo-touch">
+            <input type="checkbox" id="emo6" value="#ff7675" onchange="checkLimit(this)">
+            <label for="emo6">🌸 뭉클/감동</label>
+        </div>
+        <div class="emotion-item emo-cozy">
+            <input type="checkbox" id="emo7" value="#e1b12c" onchange="checkLimit(this)">
+            <label for="emo7">🧡 포근/힐링</label>
+        </div>
+        <div class="emotion-item emo-curious">
+            <input type="checkbox" id="emo8" value="#00cec9" onchange="checkLimit(this)">
+            <label for="emo8">🩵 깨달음/지식</label>
+        </div>
+        <div class="emotion-item emo-empty">
+            <input type="checkbox" id="emo9" value="#636e72" onchange="checkLimit(this)">
+            <label for="emo9">🩶 허무/씁쓸</label>
+        </div>
+        <div class="emotion-item emo-love">
+            <input type="checkbox" id="emo10" value="#fd79a8" onchange="checkLimit(this)">
+            <label for="emo10">💖 설렘/달달</label>
+        </div>
+    </div>
+    
+    <button id="dispenseBtn" class="btn-dispense" onclick="generateMarble()" disabled>구슬 제조하기 🌟</button>
+    <div id="counter" class="counter-text">선택된 감정: 0개 (2~3개 선택 필수)</div>
+</div>
+
+<script>
+    function checkLimit(checkbox) {
+        const checkboxes = document.querySelectorAll('.emotion-grid input[type="checkbox"]');
+        const checkedCount = Array.from(checkboxes).filter(i => i.checked).length;
+        
+        // 3개까지만 고르도록 제한하기!
+        if (checkedCount > 3) {
+            checkbox.checked = false;
+            alert("감정은 최대 3개까지만 고를 수 있어요 언니!");
+            return;
+        }
+        
+        const btn = document.getElementById('dispenseBtn');
+        const counter = document.getElementById('counter');
+        
+        counter.innerText = `선택된 감정: ${checkedCount}개 ` + (checkedCount < 2 ? '(2~3개 선택 필수)' : '(제조 가능!)');
+        
+        // 2개 또는 3개일 때만 버튼 활성화
+        if (checkedCount >= 2 && checkedCount <= 3) {
+            btn.disabled = false;
+        } else {
+            btn.disabled = true;
+        }
+    }
+
+    function generateMarble() {
+        const checkboxes = document.querySelectorAll('.emotion-grid input[type="checkbox"]');
+        const selectedColors = Array.from(checkboxes).filter(i => i.checked).map(i => i.value);
+        const marble = document.getElementById('marbleEffect');
+        
+        // 구슬이 뿅 튀어나오는 느낌 효과 리셋
+        marble.classList.remove('active');
+        
+        setTimeout(() => {
+            let backgroundStyle = '';
+            
+            // 색상 섞는 그라디언트 공식 적용
+            if (selectedColors.length === 2) {
+                backgroundStyle = `linear-gradient(135deg, ${selectedColors[0]} 0%, ${selectedColors[1]} 100%)`;
+                marble.style.boxShadow = `
+                    inset -12px -12px 25px rgba(0,0,0,0.25), 
+                    inset 10px 10px 20px rgba(255,255,255,0.7),
+                    0 0 25px ${selectedColors[0]}77,
+                    0 0 25px ${selectedColors[1]}77,
+                    0 6px 15px rgba(0,0,0,0.15)
+                `;
+            } else if (selectedColors.length === 3) {
+                backgroundStyle = `linear-gradient(135deg, ${selectedColors[0]} 0%, ${selectedColors[1]} 50%, ${selectedColors[2]} 100%)`;
+                marble.style.boxShadow = `
+                    inset -12px -12px 25px rgba(0,0,0,0.25), 
+                    inset 10px 10px 20px rgba(255,255,255,0.7),
+                    0 0 25px ${selectedColors[0]}66,
+                    0 0 25px ${selectedColors[2]}66,
+                    0 6px 15px rgba(0,0,0,0.15)
+                `;
+            }
+            
+            marble.style.background = backgroundStyle;
+            marble.classList.add('active'); // 크기가 커지며 등장!
+        }, 120);
+    }
+</script>
+
+</body>
+</html>
