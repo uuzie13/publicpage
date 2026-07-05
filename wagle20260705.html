@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>노션 독서 별점 계산기</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #fdfbf7;
+            color: #37352f;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+            margin: 0;
+        }
+        .calculator-container {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border: 1px solid #edece9;
+            width: 100%;
+            max-width: 340px;
+        }
+        h3 {
+            margin-top: 0;
+            margin-bottom: 18px;
+            text-align: center;
+            font-size: 16px;
+            color: #222;
+        }
+        .rating-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .label {
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        /* 별점 스타일 */
+        .star-rating {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: flex-end;
+            position: relative;
+        }
+        .star-rating input {
+            display: none;
+        }
+        .star-rating label {
+            cursor: pointer;
+            width: 14px;
+            height: 28px;
+            overflow: hidden;
+            position: relative;
+            display: inline-block;
+        }
+        .star-rating label::before {
+            content: '★';
+            position: absolute;
+            font-size: 24px;
+            color: #eee;
+            line-height: 28px;
+        }
+        /* 반쪽 별 설정 */
+        .star-rating label.half::before {
+            width: 14px;
+        }
+        /* 가득찬 별 설정 */
+        .star-rating label.full::before {
+            left: -14px;
+            width: 28px;
+        }
+        /* 마우스 오버 및 체크 시 불 들어오는 로직 */
+        .star-rating input:checked ~ label::before {
+            color: #ffb300;
+        }
+        .result-box {
+            margin-top: 18px;
+            padding-top: 15px;
+            border-top: 2px dashed #edece9;
+            text-align: center;
+        }
+        .result-title {
+            font-size: 13px;
+            color: #777;
+            margin-bottom: 3px;
+        }
+        .score {
+            font-size: 36px;
+            font-weight: bold;
+            color: #e15b64;
+        }
+        .score-unit {
+            font-size: 18px;
+            color: #37352f;
+            font-weight: normal;
+        }
+    </style>
+</head>
+<body>
+
+<div class="calculator-container">
+    <h3>📚 터치 별점 계산기</h3>
+    
+    <!-- 항목 1 -->
+    <div class="rating-row">
+        <span class="label">📖 페이지</span>
+        <div class="star-rating" data-category="page">
+            <input type="radio" name="page" id="page-5" value="5" onclick="calculate()"><label class="full" for="page-5"></label>
+            <input type="radio" name="page" id="page-4.5" value="4.5" onclick="calculate()"><label class="half" for="page-4.5"></label>
+            <input type="radio" name="page" id="page-4" value="4" onclick="calculate()"><label class="full" for="page-4"></label>
+            <input type="radio" name="page" id="page-3.5" value="3.5" onclick="calculate()"><label class="half" for="page-3.5"></label>
+            <input type="radio" name="page" id="page-3" value="3" onclick="calculate()"><label class="full" for="page-3"></label>
+            <input type="radio" name="page" id="page-2.5" value="2.5" onclick="calculate()"><label class="half" for="page-2.5"></label>
+            <input type="radio" name="page" id="page-2" value="2" onclick="calculate()"><label class="full" for="page-2"></label>
+            <input type="radio" name="page" id="page-1.5" value="1.5" onclick="calculate()"><label class="half" for="page-1.5"></label>
+            <input type="radio" name="page" id="page-1" value="1" onclick="calculate()"><label class="full" for="page-1"></label>
+            <input type="radio" name="page" id="page-0.5" value="0.5" onclick="calculate()"><label class="half" for="page-0.5"></label>
+        </div>
+    </div>
+
+    <!-- 항목 2 -->
+    <div class="rating-row">
+        <span class="label">😆 도파민</span>
+        <div class="star-rating" data-category="dopamine">
+            <input type="radio" name="dopamine" id="dopamine-5" value="5" onclick="calculate()"><label class="full" for="dopamine-5"></label>
+            <input type="radio" name="dopamine" id="dopamine-4.5" value="4.5" onclick="calculate()"><label class="half" for="dopamine-4.5"></label>
+            <input type="radio" name="dopamine" id="dopamine-4" value="4" onclick="calculate()"><label class="full" for="dopamine-4"></label>
+            <input type="radio" name="dopamine" id="dopamine-3.5" value="3.5" onclick="calculate()"><label class="half" for="dopamine-3.5"></label>
+            <input type="radio" name="dopamine" id="dopamine-3" value="3" onclick="calculate()"><label class="full" for="dopamine-3"></label>
+            <input type="radio" name="dopamine" id="dopamine-2.5" value="2.5" onclick="calculate()"><label class="half" for="dopamine-2.5"></label>
+            <input type="radio" name="dopamine" id="dopamine-2" value="2" onclick="calculate()"><label class="full" for="dopamine-2"></label>
+            <input type="radio" name="dopamine" id="dopamine-1.5" value="1.5" onclick="calculate()"><label class="half" for="dopamine-1.5"></label>
+            <input type="radio" name="dopamine" id="dopamine-1" value="1" onclick="calculate()"><label class="full" for="dopamine-1"></label>
+            <input type="radio" name="dopamine" id="dopamine-0.5" value="0.5" onclick="calculate()"><label class="half" for="dopamine-0.5"></label>
+        </div>
+    </div>
+
+    <!-- 항목 3 -->
+    <div class="rating-row">
+        <span class="label">💖 여운</span>
+        <div class="star-rating" data-category="lingering">
+            <input type="radio" name="lingering" id="lingering-5" value="5" onclick="calculate()"><label class="full" for="lingering-5"></label>
+            <input type="radio" name="lingering" id="lingering-4.5" value="4.5" onclick="calculate()"><label class="half" for="lingering-4.5"></label>
+            <input type="radio" name="lingering" id="lingering-4" value="4" onclick="calculate()"><label class="full" for="lingering-4"></label>
+            <input type="radio" name="lingering" id="lingering-3.5" value="3.5" onclick="calculate()"><label class="half" for="lingering-3.5"></label>
+            <input type="radio" name="lingering" id="lingering-3" value="3" onclick="calculate()"><label class="full" for="lingering-3"></label>
+            <input type="radio" name="lingering" id="lingering-2.5" value="2.5" onclick="calculate()"><label class="half" for="lingering-2.5"></label>
+            <input type="radio" name="lingering" id="lingering-2" value="2" onclick="calculate()"><label class="full" for="lingering-2"></label>
+            <input type="radio" name="lingering" id="lingering-1.5" value="1.5" onclick="calculate()"><label class="half" for="lingering-1.5"></label>
+            <input type="radio" name="lingering" id="lingering-1" value="1" onclick="calculate()"><label class="full" for="lingering-1"></label>
+            <input type="radio" name="lingering" id="lingering-0.5" value="0.5" onclick="calculate()"><label class="half" for="lingering-0.5"></label>
+        </div>
+    </div>
+
+    <!-- 항목 4 -->
+    <div class="rating-row">
+        <span class="label">🤔 성취/통찰</span>
+        <div class="star-rating" data-category="insight">
+            <input type="radio" name="insight" id="insight-5" value="5" onclick="calculate()"><label class="full" for="insight-5"></label>
+            <input type="radio" name="insight" id="insight-4.5" value="4.5" onclick="calculate()"><label class="half" for="insight-4.5"></label>
+            <input type="radio" name="insight" id="insight-4" value="4" onclick="calculate()"><label class="full" for="insight-4"></label>
+            <input type="radio" name="insight" id="insight-3.5" value="3.5" onclick="calculate()"><label class="half" for="insight-3.5"></label>
+            <input type="radio" name="insight" id="insight-3" value="3" onclick="calculate()"><label class="full" for="insight-3"></label>
+            <input type="radio" name="insight" id="insight-2.5" value="2.5" onclick="calculate()"><label class="half" for="insight-2.5"></label>
+            <input type="radio" name="insight" id="insight-2" value="2" onclick="calculate()"><label class="full" for="insight-2"></label>
+            <input type="radio" name="insight" id="insight-1.5" value="1.5" onclick="calculate()"><label class="half" for="insight-1.5"></label>
+            <input type="radio" name="insight" id="insight-1" value="1" onclick="calculate()"><label class="full" for="insight-1"></label>
+            <input type="radio" name="insight" id="insight-0.5" value="0.5" onclick="calculate()"><label class="half" for="insight-0.5"></label>
+        </div>
+    </div>
+
+    <!-- 항목 5 -->
+    <div class="rating-row">
+        <span class="label">✍️ 문장력</span>
+        <div class="star-rating" data-category="writing">
+            <input type="radio" name="writing" id="writing-5" value="5" onclick="calculate()"><label class="full" for="writing-5"></label>
+            <input type="radio" name="writing" id="writing-4.5" value="4.5" onclick="calculate()"><label class="half" for="writing-4.5"></label>
+            <input type="radio" name="writing" id="writing-4" value="4" onclick="calculate()"><label class="full" for="writing-4"></label>
+            <input type="radio" name="writing" id="writing-3.5" value="3.5" onclick="calculate()"><label class="half" for="writing-3.5"></label>
+            <input type="radio" name="writing" id="writing-3" value="3" onclick="calculate()"><label class="full" for="writing-3"></label>
+            <input type="radio" name="writing" id="writing-2.5" value="2.5" onclick="calculate()"><label class="half" for="writing-2.5"></label>
+            <input type="radio" name="writing" id="writing-2" value="2" onclick="calculate()"><label class="full" for="writing-2"></label>
+            <input type="radio" name="writing" id="writing-1.5" value="1.5" onclick="calculate()"><label class="half" for="writing-1.5"></label>
+            <input type="radio" name="writing" id="writing-1" value="1" onclick="calculate()"><label class="full" for="writing-1"></label>
+            <input type="radio" name="writing" id="writing-0.5" value="0.5" onclick="calculate()"><label class="half" for="writing-0.5"></label>
+        </div>
+    </div>
+
+    <!-- 항목 6 -->
+    <div class="rating-row">
+        <span class="label">🗑️ 인생낭비도</span>
+        <div class="star-rating" data-category="waste">
+            <input type="radio" name="waste" id="waste-5" value="5" onclick="calculate()"><label class="full" for="waste-5"></label>
+            <input type="radio" name="waste" id="waste-4.5" value="4.5" onclick="calculate()"><label class="half" for="waste-4.5"></label>
+            <input type="radio" name="waste" id="waste-4" value="4" onclick="calculate()"><label class="full" for="waste-4"></label>
+            <input type="radio" name="waste" id="waste-3.5" value="3.5" onclick="calculate()"><label class="half" for="waste-3.5"></label>
+            <input type="radio" name="waste" id="waste-3" value="3" onclick="calculate()"><label class="full" for="waste-3"></label>
+            <input type="radio" name="waste" id="waste-2.5" value="2.5" onclick="calculate()"><label class="half" for="waste-2.5"></label>
+            <input type="radio" name="waste" id="waste-2" value="2" onclick="calculate()"><label class="full" for="waste-2"></label>
+            <input type="radio" name="waste" id="waste-1.5" value="1.5" onclick="calculate()"><label class="half" for="waste-1.5"></label>
+            <input type="radio" name="waste" id="waste-1" value="1" onclick="calculate()"><label class="full" for="waste-1"></label>
+            <input type="radio" name="waste" id="waste-0.5" value="0.5" onclick="calculate()"><label class="half" for="waste-0.5"></label>
+        </div>
+    </div>
+
+    <div class="result-box">
+        <div class="result-title">총점 (별 1개 = 5점 계산)</div>
+        <div class="score"><span id="totalScore">0</span><span class="score-unit">점</span></div>
+    </div>
+</div>
+
+<script>
+    function calculate() {
+        const categories = ['page', 'dopamine', 'lingering', 'insight', 'writing', 'waste'];
+        let totalStars = 0;
+
+        categories.forEach(cat => {
+            const checkedRadio = document.querySelector(`input[name="${cat}"]:checked`);
+            if (checkedRadio) {
+                totalStars += parseFloat(checkedRadio.value);
+            }
+        });
+
+        // 총 점수 = 선택된 총 별 개수 * 5점
+        const finalScore = totalStars * 5;
+        document.getElementById('totalScore').innerText = Number(finalScore.toFixed(1));
+    }
+</script>
+
+</body>
+</html>
