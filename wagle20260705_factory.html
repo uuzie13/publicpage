@@ -3,275 +3,202 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>인사이드 아웃 독서 기억구슬 보관방</title>
+    <title>인사이드와글 - 감정 구슬 팩토리</title>
     <style>
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #fdfbf7;
-            color: #37352f;
-            padding: 15px;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-        }
-        .vending-machine, .storage-room {
-            background: #ffffff;
-            border-radius: 16px;
-            padding: 24px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            border: 1px solid #edece9;
-            width: 100%;
-            max-width: 340px;
-            box-sizing: border-box;
-        }
-        h3 {
-            margin-top: 0;
-            margin-bottom: 5px;
-            text-align: center;
-            font-size: 16px;
-            color: #222;
-        }
-        .subtitle {
-            font-size: 12px;
-            color: #888;
-            text-align: center;
-            margin-bottom: 15px;
-        }
-        /* 책 제목 적는 곳 디자인 */
-        .book-title-container {
-            margin-bottom: 15px;
-        }
-        .book-title-input {
-            width: 100%;
-            border: none;
-            border-bottom: 2px solid #edece9;
-            padding: 6px 4px;
-            font-size: 14px;
-            font-weight: 600;
-            text-align: center;
-            color: #222;
-            background-color: transparent;
-            box-sizing: border-box;
-        }
-        .book-title-input:focus {
-            outline: none;
-            border-bottom-color: #37352f;
-        }
-        /* 구슬 나오는 투명 유리 존 */
-        .display-zone {
-            height: 120px;
+            font-family: 'Pretendard', -apple-system, sans-serif;
+            background-color: #f6f5f8;
+            color: #2d3436;
             display: flex;
             justify-content: center;
             align-items: center;
-            background: radial-gradient(circle, #f9f9f6 0%, #edece9 100%);
-            border-radius: 12px;
-            margin-bottom: 15px;
-            position: relative;
-            border: 1px dashed #d3d2ce;
+            padding: 20px;
+            margin: 0;
         }
-        .marble {
-            width: 75px;
-            height: 75px;
-            border-radius: 50%;
-            background: #f0f0f0;
-            box-shadow: inset -8px -8px 20px rgba(0,0,0,0.15), inset 8px 8px 15px rgba(255,255,255,0.7);
-            transition: all 0.4s ease;
-            transform: scale(0);
-            position: relative;
+        /* 감정 제어판 보드 디자인 */
+        .control-panel {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 28px;
+            padding: 30px 24px;
+            box-shadow: 0 12px 40px rgba(111, 76, 232, 0.08);
+            border: 2px solid #ffffff;
+            width: 100%;
+            max-width: 320px;
+            box-sizing: border-box;
+            text-align: center;
         }
-        .marble.active { transform: scale(1); }
-        .marble::after {
-            content: ''; position: absolute; top: 10px; left: 10px; width: 18px; height: 10px;
-            background: rgba(255, 255, 255, 0.6); border-radius: 50%; transform: rotate(-15deg); filter: blur(0.5px);
+        .panel-header {
+            margin-bottom: 22px;
         }
-        /* 감정 그리드 버튼 설정 */
-        .emotion-grid {
-            display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin-bottom: 15px;
+        .panel-title {
+            font-size: 16px;
+            font-weight: 800;
+            color: #6c5ce7; /* 와글 시그니처 퍼플 */
+            letter-spacing: -0.5px;
+            margin: 0 0 4px 0;
         }
-        .emotion-item input { display: none; }
-        .emotion-item label {
-            display: flex; align-items: center; padding: 6px 8px; border-radius: 8px;
-            border: 1px solid #edece9; font-size: 12px; cursor: pointer; background: #fff;
-        }
-        .emotion-item input:checked + label { font-weight: bold; color: #fff; border-color: transparent; }
-        
-        .emo-joy label { border-left: 3px solid #ffd700; } .emo-joy input:checked + label { background-color: #ffd700; color: #333; }
-        .emo-sad label { border-left: 3px solid #4a90e2; } .emo-sad input:checked + label { background-color: #4a90e2; }
-        .emo-anger label { border-left: 3px solid #e15b64; } .emo-anger input:checked + label { background-color: #e15b64; }
-        .emo-fear label { border-left: 3px solid #a370f7; } .emo-fear input:checked + label { background-color: #a370f7; }
-        .emo-disgust label { border-left: 3px solid #5cb85c; } .emo-disgust input:checked + label { background-color: #5cb85c; }
-        .emo-touch label { border-left: 3px solid #ff7675; } .emo-touch input:checked + label { background-color: #ff7675; }
-        .emo-cozy label { border-left: 3px solid #e1b12c; } .emo-cozy input:checked + label { background-color: #e1b12c; }
-        .emo-curious label { border-left: 3px solid #00cec9; } .emo-curious input:checked + label { background-color: #00cec9; }
-        .emo-empty label { border-left: 3px solid #636e72; } .emo-empty input:checked + label { background-color: #636e72; }
-        .emo-love label { border-left: 3px solid #fd79a8; } .emo-love input:checked + label { background-color: #fd79a8; }
-
-        .btn-group { display: flex; gap: 8px; }
-        .btn {
-            flex: 1; padding: 10px; border: none; border-radius: 8px; font-size: 13px; font-weight: bold; cursor: pointer; transition: all 0.2s;
-        }
-        .btn-dispense { background: #37352f; color: #fff; }
-        .btn-save { background: #ffb300; color: #fff; display: none; }
-        .btn:disabled { background: #e2e1de; color: #a09f9c; cursor: not-allowed; }
-
-        /* 장기 기억 보관방 디자인 */
-        .storage-grid {
-            display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 15px; min-height: 50px;
-        }
-        .saved-marble-box {
-            display: flex; flex-direction: column; align-items: center; gap: 4px; position: relative; cursor: pointer;
-        }
-        .mini-marble {
-            width: 45px; height: 45px; border-radius: 50%; box-shadow: inset -5px -5px 12px rgba(0,0,0,0.2), inset 5px 5px 10px rgba(255,255,255,0.6), 0 4px 8px rgba(0,0,0,0.1);
-            position: relative; transition: transform 0.2s;
-        }
-        .mini-marble:hover { transform: scale(1.1); }
-        .mini-marble::after {
-            content: ''; position: absolute; top: 6px; left: 6px; width: 10px; height: 5px; background: rgba(255, 255, 255, 0.6); border-radius: 50%; transform: rotate(-15deg);
-        }
-        .saved-title {
-            font-size: 10px; text-align: center; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #555;
+        .panel-subtitle {
+            font-size: 11px;
+            color: #a0a0a0;
+            margin: 0;
             font-weight: 500;
         }
-        /* 구슬 삭제 버튼 */
-        .delete-btn {
-            position: absolute; top: -4px; right: -4px; width: 14px; height: 14px; background: rgba(0,0,0,0.6); color: #fff; border-radius: 50%; font-size: 9px; line-height: 14px; text-align: center; display: none;
+        
+        /* 영롱한 감정 구슬 오브제 */
+        .orb-wrapper {
+            position: relative;
+            width: 180px;
+            height: 180px;
+            margin: 0 auto 24px auto;
         }
-        .saved-marble-box:hover .delete-btn { display: block; }
+        .emotion-orb {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            /* 실제 입체적인 구슬 느낌이 나는 그라데이션 */
+            background: radial-gradient(circle at 30% 30%, #ffffff 0%, #fff0f5 20%, #e8dbfc 60%, #b8a1ec 100%);
+            position: relative;
+            box-shadow: 0 8px 24px rgba(154, 110, 240, 0.15), inset -5px -5px 15px rgba(108, 92, 231, 0.2);
+        }
+        
+        /* 구슬 내부의 네온 바늘 */
+        .orb-hand {
+            position: absolute;
+            bottom: 50%;
+            left: 50%;
+            transform-origin: bottom center;
+            border-radius: 4px;
+            transition: transform 0.2s cubic-bezier(0.1, 1, 0.1, 1);
+        }
+        .hour-hand {
+            width: 5px;
+            height: 45px;
+            background: #a8a5e6; /* 은은한 라벤더 */
+            margin-left: -2.5px;
+            z-index: 3;
+        }
+        .minute-hand {
+            width: 3px;
+            height: 62px;
+            background: #00cec9; /* 슬픔/까칠 네온 민트 */
+            margin-left: -1.5px;
+            z-index: 2;
+            box-shadow: 0 0 8px rgba(0, 206, 201, 0.6);
+        }
+        .second-hand {
+            width: 1.5px;
+            height: 72px;
+            background: #fdcb6e; /* 기쁨이 네온 옐로우 */
+            margin-left: -0.75px;
+            z-index: 1;
+            box-shadow: 0 0 8px rgba(253, 203, 110, 0.8);
+        }
+        .orb-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 10px;
+            height: 10px;
+            background: #6c5ce7;
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+        }
+        
+        /* 본부 디지털 디스플레이 */
+        .display-box {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2d3436;
+            font-family: 'Courier New', Courier, monospace;
+            background: rgba(108, 92, 231, 0.06);
+            padding: 8px 16px;
+            border-radius: 14px;
+            display: inline-block;
+            margin-bottom: 12px;
+            border: 1px solid rgba(108, 92, 231, 0.1);
+        }
+        
+        /* 와글와글 감정 피드 */
+        .status-feed {
+            font-size: 12px;
+            color: #57606f;
+            min-height: 18px;
+            font-weight: 600;
+            background: #ffffff;
+            padding: 6px 12px;
+            border-radius: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
     </style>
 </head>
 <body>
 
-<div class="vending-machine">
-    <h3>🔮 기억구슬 자판기</h3>
-    <div class="subtitle">감정을 고르고 구슬을 제조하세요!</div>
-    
-    <div class="book-title-container">
-        <input type="text" id="bookTitle" class="book-title-input" placeholder="📖 책 제목을 입력하세요" maxlength="30">
+<div class="control-panel">
+    <div class="panel-header">
+        <div class="panel-title">🔮 INSIDE WAGLE</div>
+        <div class="panel-subtitle">우리들의 기억구슬이 구워지는 시간</div>
     </div>
     
-    <div class="display-zone">
-        <div id="marbleEffect" class="marble"></div>
+    <div class="orb-wrapper">
+        <div class="emotion-orb">
+            <div id="hour" class="orb-hand hour-hand"></div>
+            <div id="minute" class="orb-hand minute-hand"></div>
+            <div id="second" class="orb-hand second-hand"></div>
+            <div class="orb-center"></div>
+        </div>
     </div>
     
-    <div class="emotion-grid">
-        <div class="emotion-item emo-joy"><input type="checkbox" id="emo1" value="#ffd700" onchange="checkLimit(this)"><label for="emo1">💛 기쁨/유쾌</label></div>
-        <div class="emotion-item emo-sad"><input type="checkbox" id="emo2" value="#4a90e2" onchange="checkLimit(this)"><label for="emo2">💙 슬픔/여운</label></div>
-        <div class="emotion-item emo-anger"><input type="checkbox" id="emo3" value="#e15b64" onchange="checkLimit(this)"><label for="emo3">❤️ 분노/답답</label></div>
-        <div class="emotion-item emo-fear"><input type="checkbox" id="emo4" value="#a370f7" onchange="checkLimit(this)"><label for="emo4">💜 스릴/소름</label></div>
-        <div class="emotion-item emo-disgust"><input type="checkbox" id="emo5" value="#5cb85c" onchange="changeLimit(this)"><label for="emo5">💚 까칠/찝찝</label></div>
-        <div class="emotion-item emo-touch"><input type="checkbox" id="emo6" value="#ff7675" onchange="checkLimit(this)"><label for="emo6">🌸 뭉클/감동</label></div>
-        <div class="emotion-item emo-cozy"><input type="checkbox" id="emo7" value="#e1b12c" onchange="checkLimit(this)"><label for="emo7">🧡 포근/힐링</label></div>
-        <div class="emotion-item emo-curious"><input type="checkbox" id="emo8" value="#00cec9" onchange="checkLimit(this)"><label for="emo8">🩵 깨달음/지식</label></div>
-        <div class="emotion-item emo-empty"><input type="checkbox" id="emo9" value="#636e72" onchange="checkLimit(this)"><label for="emo9">🩶 허무/씁쓸</label></div>
-        <div class="emotion-item emo-love"><input type="checkbox" id="emo10" value="#fd79a8" onchange="checkLimit(this)"><label for="emo10">💖 설렘/달달</label></div>
+    <div class="display-box" id="clockDisplay">00:00:00</div>
+    <br>
+    <div class="status-feed" id="statusMessage">
+        ✨ 감정 컨트롤 본부 가동 중
     </div>
-    
-    <div class="btn-group">
-        <button id="dispenseBtn" class="btn btn-dispense" onclick="generateMarble()" disabled>구슬 제조 🌟</button>
-        <button id="saveBtn" class="btn btn-save" onclick="saveMarble()">보관방 저장 📥</button>
-    </div>
-</div>
-
-<div class="storage-room">
-    <h3>🌌 장기 기억 보관방</h3>
-    <div class="subtitle">언니가 읽은 책의 감정들이 누적되는 방이에요</div>
-    <div id="storageGrid" class="storage-grid"></div>
 </div>
 
 <script>
-    let currentGradient = '';
-    let currentShadow = '';
+    // 멘트도 독서모임 '와글'의 정체성을 듬뿍 담아 따뜻하게 구성!
+    const waglemessages = [
+        "💛 기쁨이 구슬이 레일을 타고 굴러가는 중!",
+        "💙 이번 페이지에선 슬픔이가 제어판을 잡았나 봐요.",
+        "💜 소심이가 조심조심 다음 챕터를 넘기는 중..",
+        "💚 까칠이가 이 주인공 대사에 태클을 겁니다!",
+        "❤️ 버럭이가 책 속 빌런에게 화를 내는 타이밍!",
+        "📚 와글 멤버들의 이야기가 장기 기억으로 저장 중!"
+    ];
 
-    function checkLimit(checkbox) {
-        const checkboxes = document.querySelectorAll('.emotion-grid input[type="checkbox"]');
-        const checkedCount = Array.from(checkboxes).filter(i => i.checked).length;
-        if (checkedCount > 3) {
-            checkbox.checked = false;
-            alert("감정은 최대 3개까지만 고를 수 있어요 언니!");
-            return;
-        }
-        document.getElementById('dispenseBtn').disabled = !(checkedCount >= 2 && checkedCount <= 3);
-    }
-
-    function generateMarble() {
-        const checkboxes = document.querySelectorAll('.emotion-grid input[type="checkbox"]');
-        const selectedColors = Array.from(checkboxes).filter(i => i.checked).map(i => i.value);
-        const marble = document.getElementById('marbleEffect');
+    function runClock() {
+        const now = new Date();
+        const hrs = now.getHours();
+        const mins = now.getMinutes();
+        const secs = now.getSeconds();
         
-        marble.classList.remove('active');
-        
-        setTimeout(() => {
-            if (selectedColors.length === 2) {
-                currentGradient = `linear-gradient(135deg, ${selectedColors[0]} 0%, ${selectedColors[1]} 100%)`;
-                currentShadow = `inset -12px -12px 25px rgba(0,0,0,0.25), inset 10px 10px 20px rgba(255,255,255,0.7), 0 0 20px ${selectedColors[0]}55, 0 0 20px ${selectedColors[1]}55`;
-            } else {
-                currentGradient = `linear-gradient(135deg, ${selectedColors[0]} 0%, ${selectedColors[1]} 50%, ${selectedColors[2]} 100%)`;
-                currentShadow = `inset -12px -12px 25px rgba(0,0,0,0.25), inset 10px 10px 20px rgba(255,255,255,0.7), 0 0 20px ${selectedColors[0]}66, 0 0 20px ${selectedColors[2]}66`;
-            }
-            marble.style.background = currentGradient;
-            marble.style.boxShadow = currentShadow;
-            marble.classList.add('active');
-            document.getElementById('saveBtn').style.display = 'block'; // 저장 버튼 노출
-        }, 100);
-    }
-
-    // 로컬 스토리지에 구슬 영구 저장하는 함수
-    function saveMarble() {
-        const titleInput = document.getElementById('bookTitle');
-        const title = titleInput.value.trim() || "무제의 기억";
-        
-        const newMarble = { title: title, gradient: currentGradient, shadow: currentShadow, id: Date.now() };
-        let saved = JSON.parse(localStorage.getItem('notion_book_marbles') || '[]');
-        saved.push(newMarble);
-        localStorage.setItem('notion_book_marbles', JSON.stringify(saved));
-        
-        loadStorage(); // 보관방 새로고침
-        
-        // 입력 폼 초기화하기
-        titleInput.value = '';
-        document.getElementById('marbleEffect').classList.remove('active');
-        document.getElementById('saveBtn').style.display = 'none';
-        document.querySelectorAll('.emotion-grid input[type="checkbox"]').forEach(i => i.checked = false);
-        document.getElementById('dispenseBtn').disabled = true;
-    }
-
-    // 구슬 버리기 함수
-    function deleteMarble(id, e) {
-        e.stopPropagation();
-        if(confirm("이 기억구슬을 보관방에서 영구 삭제할까요 언니?")) {
-            let saved = JSON.parse(localStorage.getItem('notion_book_marbles') || '[]');
-            saved = saved.filter(m => m.id !== id);
-            localStorage.setItem('notion_book_marbles', JSON.stringify(saved));
-            loadStorage();
-        }
-    }
-
-    // 보관방에 저장된 구슬 불러와서 띄워주는 함수
-    function loadStorage() {
-        const grid = document.getElementById('storageGrid');
-        grid.innerHTML = '';
-        let saved = JSON.parse(localStorage.getItem('notion_book_marbles') || '[]');
-        
-        saved.forEach(m => {
-            const box = document.createElement('div');
-            box.className = 'saved-marble-box';
-            box.title = m.title;
-            box.onclick = () => alert(`🔮 기억구슬 도서명: [${m.title}]`);
+        document.getElementById('clockDisplay').innerText = 
+            `${String(hrs).padStart(2,'0')}:${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
             
-            box.innerHTML = `
-                <div class="mini-marble" style="background: ${m.gradient};"></div>
-                <div class="saved-title">${m.title}</div>
-                <div class="delete-btn" onclick="deleteMarble(${m.id}, event)">×</div>
-            `;
-            grid.appendChild(box);
-        });
+        const hRotation = (hrs % 12) * 30 + mins * 0.5;
+        const mRotation = mins * 6;
+        const sRotation = secs * 6;
+        
+        document.getElementById('hour').style.transform = `rotate(${hRotation}deg)`;
+        document.getElementById('minute').style.transform = `rotate(${mRotation}deg)`;
+        document.getElementById('second').style.transform = `rotate(${sRotation}deg)`;
+        
+        // 8초마다 와글와글 실시간 감정 상태 업데이트
+        if (secs % 8 === 0) {
+            const msgBox = document.getElementById('statusMessage');
+            msgBox.innerText = waglemessages[Math.floor(Math.random() * waglemessages.length)];
+        }
     }
-
-    // 처음 로딩될 때 보관함 열기
-    window.onload = loadStorage;
+    
+    setInterval(runClock, 1000);
+    runClock();
 </script>
 
 </body>
