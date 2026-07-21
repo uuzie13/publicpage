@@ -3,20 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>인사이드와글 탕진이 룰렛</title>
+    <title>돌려돌려 프리덤</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbit&family=Jua&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
             font-family: 'Orbit', 'Apple SD Gothic Neo', 'Jua', sans-serif;
-            background: repeating-linear-gradient(
-                45deg,
-                #ff9a9e,
-                #ff9a9e 20px,
-                #fecfef 20px,
-                #fecfef 40px
-            );
+            background: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+            background-size: 400% 400%;
+            animation: goldGradient 10s ease infinite;
             display: flex;
             justify-content: center;
             align-items: flex-start;
@@ -24,12 +20,18 @@
             overflow-x: hidden;
         }
 
+        @keyframes goldGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
         .mobile-container {
             width: 100%;
             max-width: 420px;
             min-height: 100vh;
-            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.9), rgba(200, 240, 255, 0.95));
-            box-shadow: 0 0 30px rgba(0,0,0,0.3);
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.95), rgba(253, 248, 235, 0.95));
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -37,11 +39,11 @@
         }
 
         .title {
-            color: #DE9E10;
+            color: #b38728;
             font-size: 24px;
             text-align: center;
             margin-bottom: 20px;
-            text-shadow: 2px 2px 0px #fff, 3px 3px 0px rgba(0,0,0,0.1);
+            text-shadow: 1px 1px 0px #fff, 2px 2px 4px rgba(0,0,0,0.2);
             font-weight: bold;
         }
 
@@ -57,11 +59,12 @@
             font-family: 'Orbit', 'Apple SD Gothic Neo', 'Jua', sans-serif;
             font-size: 16px;
             padding: 10px 15px;
-            border: 3px solid #ffbb00;
+            border: 3px solid #b38728;
             border-radius: 20px;
             outline: none;
             width: 60%;
             text-align: center;
+            background-color: #fffdf5;
         }
 
         .roulette-wrapper {
@@ -80,7 +83,7 @@
             height: 0;
             border-left: 25px solid transparent;
             border-right: 25px solid transparent;
-            border-top: 50px solid #ff4757;
+            border-top: 50px solid #e74c3c;
             z-index: 20;
             filter: drop-shadow(0px 5px 3px rgba(0,0,0,0.4));
         }
@@ -89,7 +92,7 @@
             width: 100%;
             height: 100%;
             border-radius: 50%;
-            box-shadow: 0 0 0 12px #ffbb00, 0 0 0 16px #ff4757, 0 10px 25px rgba(0,0,0,0.4);
+            box-shadow: 0 0 0 10px #dfb14b, 0 0 0 15px #2c3e50, 0 10px 25px rgba(0,0,0,0.5);
             transition: transform 4s cubic-bezier(0.1, 0.7, 0.1, 1);
         }
 
@@ -100,11 +103,11 @@
             transform: translate(-50%, -50%);
             width: 70px;
             height: 70px;
-            background: radial-gradient(circle, #fff 30%, #ffeaa7 100%);
-            border: 5px solid #ffbb00;
+            background: radial-gradient(circle, #fcf6ba 30%, #b38728 100%);
+            border: 5px solid #2c3e50;
             border-radius: 50%;
             z-index: 10;
-            box-shadow: inset 0 3px 5px rgba(0,0,0,0.2), 0 3px 10px rgba(0,0,0,0.4);
+            box-shadow: inset 0 3px 5px rgba(0,0,0,0.3), 0 3px 10px rgba(0,0,0,0.5);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -112,8 +115,8 @@
         }
 
         .spin-btn {
-            background: linear-gradient(to bottom, #4facfe 0%, #00f2fe 100%);
-            color: white;
+            background: linear-gradient(to bottom, #f6d365 0%, #fda085 100%);
+            color: #2c3e50;
             font-family: 'Orbit', 'Apple SD Gothic Neo', 'Jua', sans-serif;
             font-size: 24px;
             font-weight: bold;
@@ -121,18 +124,19 @@
             border-radius: 40px;
             padding: 12px 40px;
             cursor: pointer;
-            box-shadow: 0 8px 0 #0984e3, 0 15px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 8px 0 #e67e22, 0 15px 15px rgba(0,0,0,0.2);
             transition: all 0.1s;
             margin-bottom: 20px;
         }
 
         .spin-btn:active {
             transform: translateY(8px);
-            box-shadow: 0 0 0 #0984e3, 0 5px 5px rgba(0,0,0,0.2);
+            box-shadow: 0 0 0 #e67e22, 0 5px 5px rgba(0,0,0,0.2);
         }
 
         .spin-btn:disabled {
             background: #bdc3c7;
+            color: #fff;
             box-shadow: 0 8px 0 #7f8c8d;
             cursor: not-allowed;
             transform: none;
@@ -145,13 +149,14 @@
             padding: 15px 20px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             margin-top: 10px;
+            border: 2px solid #dfb14b;
         }
 
         .ranking-title {
             text-align: center;
             font-size: 16px; 
-            color: #2c3e50;
-            border-bottom: 2px dashed #bdc3c7;
+            color: #b38728;
+            border-bottom: 2px dashed #dfb14b;
             padding-bottom: 8px;
             margin-bottom: 12px;
             font-weight: bold;
@@ -169,16 +174,17 @@
             font-size: 14px; 
             padding: 8px 0;
             border-bottom: 1px solid #f1f2f6;
+            color: #2c3e50;
         }
         
         .ranking-list li span:last-child {
-            color: #e15f41;
+            color: #e74c3c;
             font-weight: bold;
         }
 
         #loading {
             display: none;
-            color: #ff4757;
+            color: #b38728;
             font-size: 16px;
             margin-bottom: 15px;
             font-weight: bold;
@@ -188,7 +194,7 @@
 <body>
 
 <div class="mobile-container">
-    <div class="title">🎪 인사이드와글 탕진이 룰렛 🎡</div>
+    <div class="title">🎰 돌려돌려 프리덤 💸</div>
 
     <div class="input-group">
         <input type="text" id="userName" placeholder="이름을 입력하세요!">
@@ -204,7 +210,7 @@
     <button class="spin-btn" id="spinBtn" onclick="spin()">돌리기!</button>
 
     <div class="ranking-board">
-        <div class="ranking-title">🏆 인생한방 🏆</div>
+        <div class="ranking-title">🏆 명예의 전당 🏆</div>
         <ul class="ranking-list" id="rankingList">
             <li>데이터를 불러오는 중...</li>
         </ul>
@@ -212,7 +218,8 @@
 </div>
 
 <script>
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbx2cQXwVBPN3v3s6MSG_SG5LUKmCL2q0XcycU7yN7ejNtHa4Lm27ITUdGaOfrDgaLMX/exec";
+    // ★★★ 여기에 복사한 Apps Script 웹 앱 URL을 붙여넣으세요! ★★★
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbxkyYSjVJjDeIhVT0blQZjrqVcA1nEs30KlmNarlsP1OMGektU8GAEPQumdjVtpjqBG/exec";
 
     const canvas = document.getElementById('wheel');
     const ctx = canvas.getContext('2d');
@@ -227,25 +234,21 @@
         localStorage.setItem('rouletteUserName', e.target.value);
     });
 
-    // 각 칸마다 어울리는 두 가지 색상(color1, color2)을 정의하여 화려함을 더했습니다.
+    // 100, 77, 50점이 비슷한 크기를 갖도록 조정했고, 150점은 살짝 작게 적용했습니다.
     const slices = [
-        { name: "💎 5000", weight: 15, color1: "#ff0844", color2: "#ffb199" }, 
-        { name: "👑 1000", weight: 20, color1: "#4facfe", color2: "#00f2fe" }, 
-        { name: "🚀 500",  weight: 20, color1: "#43e97b", color2: "#38f9d7" }, 
-        { name: "⭐ 400",  weight: 40, color1: "#f6d365", color2: "#fda085" }, 
+        { name: "💎 300", weight: 4, color1: "#ff0844", color2: "#ffb199" },
+        { name: "👑 200", weight: 4, color1: "#4facfe", color2: "#00f2fe" }, 
+        { name: "🎉 150", weight: 12, color1: "#43e97b", color2: "#38f9d7" }, 
+        { name: "✨ 100", weight: 18, color1: "#f6d365", color2: "#fda085" }, 
+        { name: "🍀 77",  weight: 18, color1: "#c471f5", color2: "#fa71cd" },  
+        { name: "🚀 50",  weight: 18, color1: "#48c6ef", color2: "#6f86d6" }, 
+        { name: "🎈 7",   weight: 6, color1: "#fccb90", color2: "#d57eeb" },  
+        { name: "💩 1",   weight: 6, color1: "#f77062", color2: "#fe5196" }, 
         
-        { name: "🛸 350",  weight: 15, color1: "#c471f5", color2: "#fa71cd" }, 
-        { name: "🎢 305",  weight: 15, color1: "#48c6ef", color2: "#6f86d6" }, 
-        { name: "🎡 301",  weight: 25, color1: "#fccb90", color2: "#d57eeb" }, 
-        { name: "🎈 300",  weight: 30, color1: "#b224ef", color2: "#7579ff" }, 
-        { name: "🎪 299",  weight: 25, color1: "#e0c3fc", color2: "#8ec5fc" }, 
-        { name: "🎨 280",  weight: 20, color1: "#fa709a", color2: "#fee140" }, 
-        { name: "🎭 222",  weight: 15, color1: "#a18cd1", color2: "#fbc2eb" },
-        
-        { name: "🎁 170",  weight: 35, color1: "#84fab0", color2: "#8fd3f4" },
-        { name: "🎉 150",  weight: 35, color1: "#ff758c", color2: "#ff7eb3" },
-        { name: "✨ 100",  weight: 40, color1: "#16d9e3", color2: "#46aef7" }, 
-        { name: "💩 1~",    weight: 15, color1: "#333333", color2: "#fe5196" }
+        { name: "북큐1회연속채우기권", lines: ["북큐 1회연속", "채우기권"], weight: 12, color1: "#b224ef", color2: "#7579ff" }, 
+        { name: "프리덤1회연속채우기권", lines: ["프리덤 1회연속", "채우기권"], weight: 12, color1: "#e0c3fc", color2: "#8ec5fc" }, 
+        { name: "하닉오르면한번더~!", lines: ["하닉 오르면", "한번더~!"], weight: 12, color1: "#fa709a", color2: "#fee140" }, 
+        { name: "구립도서관무료입장권", lines: ["구립도서관", "무료입장권"], weight: 12, color1: "#a18cd1", color2: "#fbc2eb" } 
     ];
 
     const totalWeight = slices.reduce((sum, slice) => sum + slice.weight, 0);
@@ -268,15 +271,13 @@
             ctx.arc(centerX, centerY, radius, startAngle, endAngle);
             ctx.closePath();
             
-            // ★ 그라데이션 적용 부분 ★
-            // 칸의 중간 각도를 계산하여 룰렛 중심에서 바깥쪽으로 향하는 선형 그라데이션을 만듭니다.
             const midAngle = startAngle + sliceAngle / 2;
             const edgeX = centerX + Math.cos(midAngle) * radius;
             const edgeY = centerY + Math.sin(midAngle) * radius;
             
             const gradient = ctx.createLinearGradient(centerX, centerY, edgeX, edgeY);
-            gradient.addColorStop(0, slices[i].color1); // 안쪽 색상
-            gradient.addColorStop(1, slices[i].color2); // 바깥쪽 색상
+            gradient.addColorStop(0, slices[i].color1);
+            gradient.addColorStop(1, slices[i].color2); 
             
             ctx.fillStyle = gradient;
             ctx.fill();
@@ -290,11 +291,18 @@
             ctx.textAlign = "right";
             ctx.fillStyle = "#fff";
             
-            ctx.font = "bold 18px 'Orbit', 'Apple SD Gothic Neo', 'Jua', sans-serif";
+            const fontSize = slices[i].weight <= 6 ? 11 : 13;
+            ctx.font = `bold ${fontSize}px 'Orbit', 'Apple SD Gothic Neo', 'Jua', sans-serif`;
             ctx.shadowColor = "rgba(0,0,0,0.6)";
             ctx.shadowBlur = 4;
             
-            ctx.fillText(slices[i].name, radius - 15, 6);
+            if (slices[i].lines) {
+                ctx.fillText(slices[i].lines[0], radius - 15, -6); 
+                ctx.fillText(slices[i].lines[1], radius - 15, 12); 
+            } else {
+                ctx.fillText(slices[i].name, radius - 15, 4); 
+            }
+            
             ctx.restore();
 
             startAngle = endAngle;
@@ -318,7 +326,10 @@
             rankings.forEach((r, index) => {
                 const li = document.createElement('li');
                 let medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '🔹';
-                li.innerHTML = `<span>${medal} ${r.name}</span> <span>${r.score}점</span>`;
+                
+                let displayScore = isNaN(parseInt(r.scoreText)) ? r.scoreText : `${r.scoreText}점`;
+                
+                li.innerHTML = `<span>${medal} ${r.name}</span> <span>${displayScore}</span>`;
                 list.appendChild(li);
             });
         } catch (error) {
@@ -372,7 +383,8 @@
             canvas.style.transform = `rotate(${currentRotation}deg)`;
 
             setTimeout(() => {
-                alert(`🎉 축하합니다! [${userName}]님, ${data.score}점 당첨!`);
+                let msgScore = isNaN(parseInt(data.score)) ? data.score : `${data.score}점`;
+                alert(`🎉 축하합니다! [${userName}]님, ${msgScore} 당첨!`);
                 loadRankings(); 
                 isSpinning = false;
             }, 4000);
