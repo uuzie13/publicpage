@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>인사이드와글 탕진이 룰렛</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbit&family=Jua&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Orbit', 'Apple SD Gothic Neo', 'Jua', sans-serif;
+            background: repeating-linear-gradient(
+                45deg,
+                #ff9a9e,
+                #ff9a9e 20px,
+                #fecfef 20px,
+                #fecfef 40px
+            );
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .mobile-container {
+            width: 100%;
+            max-width: 420px;
+            min-height: 100vh;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.9), rgba(200, 240, 255, 0.95));
+            box-shadow: 0 0 30px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px 15px;
+        }
+
+        .title {
+            color: #DE9E10;
+            font-size: 24px;
+            text-align: center;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 0px #fff, 3px 3px 0px rgba(0,0,0,0.1);
+            font-weight: bold;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .input-group input {
+            font-family: 'Orbit', 'Apple SD Gothic Neo', 'Jua', sans-serif;
+            font-size: 16px;
+            padding: 10px 15px;
+            border: 3px solid #ffbb00;
+            border-radius: 20px;
+            outline: none;
+            width: 60%;
+            text-align: center;
+        }
+
+        .roulette-wrapper {
+            position: relative;
+            width: 340px;
+            height: 340px;
+            margin-bottom: 30px;
+        }
+
+        .pointer {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 25px solid transparent;
+            border-right: 25px solid transparent;
+            border-top: 50px solid #ff4757;
+            z-index: 20;
+            filter: drop-shadow(0px 5px 3px rgba(0,0,0,0.4));
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            box-shadow: 0 0 0 12px #ffbb00, 0 0 0 16px #ff4757, 0 10px 25px rgba(0,0,0,0.4);
+            transition: transform 4s cubic-bezier(0.1, 0.7, 0.1, 1);
+        }
+
+        .center-circle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70px;
+            height: 70px;
+            background: radial-gradient(circle, #fff 30%, #ffeaa7 100%);
+            border: 5px solid #ffbb00;
+            border-radius: 50%;
+            z-index: 10;
+            box-shadow: inset 0 3px 5px rgba(0,0,0,0.2), 0 3px 10px rgba(0,0,0,0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+        }
+
+        .spin-btn {
+            background: linear-gradient(to bottom, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            font-family: 'Orbit', 'Apple SD Gothic Neo', 'Jua', sans-serif;
+            font-size: 24px;
+            font-weight: bold;
+            border: none;
+            border-radius: 40px;
+            padding: 12px 40px;
+            cursor: pointer;
+            box-shadow: 0 8px 0 #0984e3, 0 15px 15px rgba(0,0,0,0.2);
+            transition: all 0.1s;
+            margin-bottom: 20px;
+        }
+
+        .spin-btn:active {
+            transform: translateY(8px);
+            box-shadow: 0 0 0 #0984e3, 0 5px 5px rgba(0,0,0,0.2);
+        }
+
+        .spin-btn:disabled {
+            background: #bdc3c7;
+            box-shadow: 0 8px 0 #7f8c8d;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .ranking-board {
+            width: 90%;
+            background: #fff;
+            border-radius: 15px;
+            padding: 15px 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-top: 10px;
+        }
+
+        .ranking-title {
+            text-align: center;
+            font-size: 16px; 
+            color: #2c3e50;
+            border-bottom: 2px dashed #bdc3c7;
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+            font-weight: bold;
+        }
+
+        .ranking-list {
+            list-style: none;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .ranking-list li {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px; 
+            padding: 8px 0;
+            border-bottom: 1px solid #f1f2f6;
+        }
+        
+        .ranking-list li span:last-child {
+            color: #e15f41;
+            font-weight: bold;
+        }
+
+        #loading {
+            display: none;
+            color: #ff4757;
+            font-size: 16px;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="mobile-container">
+    <div class="title">🎪 인사이드와글 탕진이 룰렛 🎡</div>
+
+    <div class="input-group">
+        <input type="text" id="userName" placeholder="이름을 입력하세요!">
+    </div>
+
+    <div class="roulette-wrapper">
+        <div class="pointer"></div>
+        <canvas id="wheel" width="400" height="400"></canvas>
+        <div class="center-circle">⭐️</div>
+    </div>
+
+    <div id="loading">결과를 불러오는 중...🚀</div>
+    <button class="spin-btn" id="spinBtn" onclick="spin()">돌리기!</button>
+
+    <div class="ranking-board">
+        <div class="ranking-title">🏆 인생한방 🏆</div>
+        <ul class="ranking-list" id="rankingList">
+            <li>데이터를 불러오는 중...</li>
+        </ul>
+    </div>
+</div>
+
+<script>
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbx2cQXwVBPN3v3s6MSG_SG5LUKmCL2q0XcycU7yN7ejNtHa4Lm27ITUdGaOfrDgaLMX/exec";
+
+    const canvas = document.getElementById('wheel');
+    const ctx = canvas.getContext('2d');
+    const userNameInput = document.getElementById('userName');
+
+    const savedName = localStorage.getItem('rouletteUserName');
+    if (savedName) {
+        userNameInput.value = savedName;
+    }
+
+    userNameInput.addEventListener('input', (e) => {
+        localStorage.setItem('rouletteUserName', e.target.value);
+    });
+
+    // 각 칸마다 어울리는 두 가지 색상(color1, color2)을 정의하여 화려함을 더했습니다.
+    const slices = [
+        { name: "💎 5000", weight: 15, color1: "#ff0844", color2: "#ffb199" }, 
+        { name: "👑 1000", weight: 20, color1: "#4facfe", color2: "#00f2fe" }, 
+        { name: "🚀 500",  weight: 20, color1: "#43e97b", color2: "#38f9d7" }, 
+        { name: "⭐ 400",  weight: 40, color1: "#f6d365", color2: "#fda085" }, 
+        
+        { name: "🛸 350",  weight: 15, color1: "#c471f5", color2: "#fa71cd" }, 
+        { name: "🎢 305",  weight: 15, color1: "#48c6ef", color2: "#6f86d6" }, 
+        { name: "🎡 301",  weight: 25, color1: "#fccb90", color2: "#d57eeb" }, 
+        { name: "🎈 300",  weight: 30, color1: "#b224ef", color2: "#7579ff" }, 
+        { name: "🎪 299",  weight: 25, color1: "#e0c3fc", color2: "#8ec5fc" }, 
+        { name: "🎨 280",  weight: 20, color1: "#fa709a", color2: "#fee140" }, 
+        { name: "🎭 222",  weight: 15, color1: "#a18cd1", color2: "#fbc2eb" },
+        
+        { name: "🎁 170",  weight: 35, color1: "#84fab0", color2: "#8fd3f4" },
+        { name: "🎉 150",  weight: 35, color1: "#ff758c", color2: "#ff7eb3" },
+        { name: "✨ 100",  weight: 40, color1: "#16d9e3", color2: "#46aef7" }, 
+        { name: "💩 1~",    weight: 15, color1: "#333333", color2: "#fe5196" }
+    ];
+
+    const totalWeight = slices.reduce((sum, slice) => sum + slice.weight, 0);
+    let currentRotation = 0;
+    let isSpinning = false;
+
+    function drawWheel() {
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+        const radius = canvas.width / 2;
+
+        let startAngle = -Math.PI / 2; 
+
+        for (let i = 0; i < slices.length; i++) {
+            const sliceAngle = (slices[i].weight / totalWeight) * 2 * Math.PI;
+            const endAngle = startAngle + sliceAngle;
+
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            ctx.arc(centerX, centerY, radius, startAngle, endAngle);
+            ctx.closePath();
+            
+            // ★ 그라데이션 적용 부분 ★
+            // 칸의 중간 각도를 계산하여 룰렛 중심에서 바깥쪽으로 향하는 선형 그라데이션을 만듭니다.
+            const midAngle = startAngle + sliceAngle / 2;
+            const edgeX = centerX + Math.cos(midAngle) * radius;
+            const edgeY = centerY + Math.sin(midAngle) * radius;
+            
+            const gradient = ctx.createLinearGradient(centerX, centerY, edgeX, edgeY);
+            gradient.addColorStop(0, slices[i].color1); // 안쪽 색상
+            gradient.addColorStop(1, slices[i].color2); // 바깥쪽 색상
+            
+            ctx.fillStyle = gradient;
+            ctx.fill();
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = "#fff";
+            ctx.stroke();
+
+            ctx.save();
+            ctx.translate(centerX, centerY);
+            ctx.rotate(startAngle + sliceAngle / 2);
+            ctx.textAlign = "right";
+            ctx.fillStyle = "#fff";
+            
+            ctx.font = "bold 18px 'Orbit', 'Apple SD Gothic Neo', 'Jua', sans-serif";
+            ctx.shadowColor = "rgba(0,0,0,0.6)";
+            ctx.shadowBlur = 4;
+            
+            ctx.fillText(slices[i].name, radius - 15, 6);
+            ctx.restore();
+
+            startAngle = endAngle;
+        }
+    }
+    drawWheel();
+
+    async function loadRankings() {
+        try {
+            const response = await fetch(`${GAS_URL}?action=getRank`);
+            const rankings = await response.json();
+            
+            const list = document.getElementById('rankingList');
+            list.innerHTML = '';
+            
+            if(rankings.length === 0) {
+                list.innerHTML = '<li>아직 참여자가 없습니다!</li>';
+                return;
+            }
+
+            rankings.forEach((r, index) => {
+                const li = document.createElement('li');
+                let medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '🔹';
+                li.innerHTML = `<span>${medal} ${r.name}</span> <span>${r.score}점</span>`;
+                list.appendChild(li);
+            });
+        } catch (error) {
+            console.error("랭킹 로드 실패:", error);
+        }
+    }
+
+    loadRankings();
+
+    async function spin() {
+        const userName = userNameInput.value.trim();
+        if (!userName) {
+            alert("이름을 먼저 입력해주세요!");
+            return;
+        }
+
+        if (isSpinning) return;
+        isSpinning = true;
+        
+        const spinBtn = document.getElementById('spinBtn');
+        const loading = document.getElementById('loading');
+        
+        spinBtn.disabled = true;
+        loading.style.display = 'block';
+
+        try {
+            const response = await fetch(`${GAS_URL}?action=spin&name=${encodeURIComponent(userName)}`);
+            const data = await response.json();
+
+            loading.style.display = 'none';
+
+            if (!data.success) {
+                alert(data.message);
+                isSpinning = false;
+                spinBtn.disabled = false;
+                return;
+            }
+
+            const winningIndex = data.winningIndex;
+            const baseSpins = 360 * 5; 
+            
+            let angleToCenter = 0;
+            for (let i = 0; i < winningIndex; i++) {
+                angleToCenter += (slices[i].weight / totalWeight) * 360;
+            }
+            angleToCenter += ((slices[winningIndex].weight / totalWeight) * 360) / 2;
+
+            const targetRotation = baseSpins - angleToCenter;
+            currentRotation += targetRotation;
+
+            canvas.style.transform = `rotate(${currentRotation}deg)`;
+
+            setTimeout(() => {
+                alert(`🎉 축하합니다! [${userName}]님, ${data.score}점 당첨!`);
+                loadRankings(); 
+                isSpinning = false;
+            }, 4000);
+
+        } catch (error) {
+            alert("서버와 통신 중 오류가 발생했습니다. 다시 시도해주세요.");
+            loading.style.display = 'none';
+            isSpinning = false;
+            spinBtn.disabled = false;
+        }
+    }
+</script>
+
+</body>
+</html>
