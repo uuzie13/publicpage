@@ -210,7 +210,7 @@
     <div class="subtitle">제로에 걸어 제로에~~~!!!</div>
 
     <div class="input-group">
-        <input type="text" id="userName" placeholder="이름을 입력하세요!">
+        <input type="text" id="userName" placeholder="이름+날짜를 입력하세요!">
     </div>
 
     <div class="roulette-wrapper">
@@ -230,9 +230,8 @@
     </div>
 </div>
 
-<script>
-    // ★★★ 여기에 복사한 Apps Script 웹 앱 URL을 붙여넣으세요! ★★★
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbwrd9moPp4FfEmrP6DhocrTakCV8FDI4Q1h_I5AQPi3IfM5V_BVlxgtusQ6Q4VKBcLo/exec";
+<script> 
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbwyzlkpeDPTwbziFoU9ikadhHS_xvCETkNuJ6E3BQA43gxg91dxKKqhCNRWxkl6EF5G/exec";
 
     const canvas = document.getElementById('wheel');
     const ctx = canvas.getContext('2d');
@@ -337,7 +336,7 @@
 
             rankings.forEach((r, index) => {
                 const li = document.createElement('li');
-                let icon = index === 0 ? '🆕' : '🔹';
+                let icon = index === 0 ? '🔥' : '🎲';
                 
                 let displayScore = isNaN(parseInt(r.scoreText)) ? r.scoreText : `${r.scoreText}점`;
                 
