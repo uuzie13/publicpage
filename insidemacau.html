@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- 브라우저 창 이름 -->
     <title>돌려돌려 프리덤</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbit&family=Jua&display=swap" rel="stylesheet">
     <style>
@@ -194,7 +195,8 @@
 <body>
 
 <div class="mobile-container">
-    <div class="title">🎰 돌려돌려 프리덤 💸</div>
+    <!-- 화면 안의 큰 제목 -->
+    <div class="title">🎰 제로에 걸어 제로 한 번 더! 💸</div>
 
     <div class="input-group">
         <input type="text" id="userName" placeholder="이름을 입력하세요!">
@@ -210,7 +212,8 @@
     <button class="spin-btn" id="spinBtn" onclick="spin()">돌리기!</button>
 
     <div class="ranking-board">
-        <div class="ranking-title">🏆 명예의 전당 🏆</div>
+        <!-- 기록판 이름 변경 -->
+        <div class="ranking-title">🏆 걸어걸어 🏆</div>
         <ul class="ranking-list" id="rankingList">
             <li>데이터를 불러오는 중...</li>
         </ul>
@@ -219,7 +222,7 @@
 
 <script>
     // ★★★ 여기에 복사한 Apps Script 웹 앱 URL을 붙여넣으세요! ★★★
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbyW0yb60dqIjQQ4CfSoqn8rUs62j22R6Cnp9RdFTe07MNvbK8Nwv2YFEUtR2ydKVac0/exec";
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbzfSZtkjuFzYxANmzh3YGOGNAxOffB6h3jkZ9ym-jUxFWwhVEU2dHWlNgd-QfWSqNQs/exec";
 
     const canvas = document.getElementById('wheel');
     const ctx = canvas.getContext('2d');
@@ -234,7 +237,6 @@
         localStorage.setItem('rouletteUserName', e.target.value);
     });
 
-    // 100, 77, 50점이 비슷한 크기를 갖도록 조정했고, 150점은 살짝 작게 적용했습니다.
     const slices = [
         { name: "💎 300", weight: 4, color1: "#ff0844", color2: "#ffb199" },
         { name: "👑 200", weight: 4, color1: "#4facfe", color2: "#00f2fe" }, 
@@ -325,11 +327,12 @@
 
             rankings.forEach((r, index) => {
                 const li = document.createElement('li');
-                let medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '🔹';
+                // 시간순 나열이므로, 첫 번째(가장 최신) 항목에만 'NEW', 나머지는 일반 아이콘
+                let icon = index === 0 ? '🆕' : '🔹';
                 
                 let displayScore = isNaN(parseInt(r.scoreText)) ? r.scoreText : `${r.scoreText}점`;
                 
-                li.innerHTML = `<span>${medal} ${r.name}</span> <span>${displayScore}</span>`;
+                li.innerHTML = `<span>${icon} ${r.name}</span> <span>${displayScore}</span>`;
                 list.appendChild(li);
             });
         } catch (error) {
