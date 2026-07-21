@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <!-- 브라우저 창 이름 -->
     <title>돌려돌려 프리덤</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbit&family=Jua&display=swap" rel="stylesheet">
     <style>
@@ -39,12 +38,23 @@
             padding: 30px 15px;
         }
 
+        /* 큰 메인 타이틀 */
         .title {
             color: #b38728;
-            font-size: 24px;
+            font-size: 28px;
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 5px; /* 서브타이틀과의 간격을 위해 여백 축소 */
             text-shadow: 1px 1px 0px #fff, 2px 2px 4px rgba(0,0,0,0.2);
+            font-weight: bold;
+        }
+
+        /* 작은 서브 타이틀 추가 */
+        .subtitle {
+            color: #8e6819;
+            font-size: 16px;
+            text-align: center;
+            margin-bottom: 25px;
+            text-shadow: 1px 1px 0px #fff;
             font-weight: bold;
         }
 
@@ -195,8 +205,9 @@
 <body>
 
 <div class="mobile-container">
-    <!-- 화면 안의 큰 제목 -->
-    <div class="title">🎰 와글노름꾼💸</div>
+    <!-- 타이틀 영역 -->
+    <div class="title">🎰 와글노름꾼 💸</div>
+    <div class="subtitle">제로에 걸어 제로에~~~!!!</div>
 
     <div class="input-group">
         <input type="text" id="userName" placeholder="이름을 입력하세요!">
@@ -212,8 +223,7 @@
     <button class="spin-btn" id="spinBtn" onclick="spin()">돌리기!</button>
 
     <div class="ranking-board">
-        <!-- 기록판 이름 변경 -->
-        <div class="ranking-title">🏆 제로에 걸어 제로 한 번 더! 🏆</div>
+        <div class="ranking-title">🏆 걸어걸어 🏆</div>
         <ul class="ranking-list" id="rankingList">
             <li>데이터를 불러오는 중...</li>
         </ul>
@@ -222,7 +232,7 @@
 
 <script>
     // ★★★ 여기에 복사한 Apps Script 웹 앱 URL을 붙여넣으세요! ★★★
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbzfSZtkjuFzYxANmzh3YGOGNAxOffB6h3jkZ9ym-jUxFWwhVEU2dHWlNgd-QfWSqNQs/exec";
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbwrd9moPp4FfEmrP6DhocrTakCV8FDI4Q1h_I5AQPi3IfM5V_BVlxgtusQ6Q4VKBcLo/exec";
 
     const canvas = document.getElementById('wheel');
     const ctx = canvas.getContext('2d');
@@ -327,7 +337,6 @@
 
             rankings.forEach((r, index) => {
                 const li = document.createElement('li');
-                // 시간순 나열이므로, 첫 번째(가장 최신) 항목에만 'NEW', 나머지는 일반 아이콘
                 let icon = index === 0 ? '🆕' : '🔹';
                 
                 let displayScore = isNaN(parseInt(r.scoreText)) ? r.scoreText : `${r.scoreText}점`;
