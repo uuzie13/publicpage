@@ -152,8 +152,8 @@
         .theme-생글이 { border-color: var(--joy-main); background-color: var(--joy-bg); }
         .badge-생글이 { background-color: var(--joy-main); color: #333; }
 
-        .theme-새침이 { border-color: var(--disgust-main); background-color: var(--disgust-bg); }
-        .badge-새침이 { background-color: var(--disgust-main); }
+        .theme-당당이 { border-color: var(--disgust-main); background-color: var(--disgust-bg); }
+        .badge-당당이 { background-color: var(--disgust-main); }
 
         .theme-포근이 { border-color: var(--sadness-main); background-color: var(--sadness-bg); }
         .badge-포근이 { background-color: var(--sadness-main); }
@@ -177,29 +177,29 @@
         <label for="memberSelect">✨ 닉네임 선택하기</label>
         <select id="memberSelect">
             <option value="" disabled selected>✨ 닉네임을 선택하세요 ✨</option>
-            <optgroup label="💛 생글이 (기쁨)">
+            <optgroup label="💛 생글이">
                 <option value="따란">따란 (생글이)</option>
                 <option value="에스">에스 (생글이)</option>
                 <option value="송">송 (생글이)</option>
                 <option value="임유월">임유월 (생글이)</option>
                 <option value="윤슬">윤슬 (생글이)</option>
             </optgroup>
-            <optgroup label="💚 새침이 (까칠)">
-                <option value="당근">당근 (새침이)</option>
-                <option value="써니">써니 (새침이)</option>
-                <option value="동글">동글 (새침이)</option>
-                <option value="구마">구마 (새침이)</option>
-                <option value="밍보">밍보 (새침이)</option>
-                <option value="스물">스물 (새침이)</option>
+            <optgroup label="💚 당당이">
+                <option value="당근">당근 (당당이)</option>
+                <option value="써니">써니 (당당이)</option>
+                <option value="동글">동글 (당당이)</option>
+                <option value="구마">구마 (당당이)</option>
+                <option value="밍보">밍보 (당당이)</option>
+                <option value="스물">스물 (당당이)</option>
             </optgroup>
-            <optgroup label="💙 포근이 (슬픔)">
+            <optgroup label="💙 포근이">
                 <option value="최미노">최미노 (포근이)</option>
                 <option value="모모">모모 (포근이)</option>
                 <option value="초록">초록 (포근이)</option>
                 <option value="영원">영원 (포근이)</option>
                 <option value="이리">이리 (포근이)</option>
             </optgroup>
-            <optgroup label="💜 중심이 (소심)">
+            <optgroup label="💜 중심이">
                 <option value="고래">고래 (중심이)</option>
                 <option value="오핑">오핑 (중심이)</option>
                 <option value="유누">유누 (중심이)</option>
@@ -208,7 +208,7 @@
                 <option value="수리">수리 (중심이)</option>
                 <option value="모아나">모아나 (중심이)</option>
             </optgroup>
-            <optgroup label="❤️ 불끈이 (버럭)">
+            <optgroup label="❤️ 불끈이">
                 <option value="채채">채채 (불끈이)</option>
                 <option value="신디">신디 (불끈이)</option>
                 <option value="난수">난수 (불끈이)</option>
@@ -236,10 +236,23 @@
 </div>
 
 <script>
+    // 날짜를 정확하게 KST(한국 시간) 기준으로 가져오도록 수정
+    function getTodayFormatted() {
+        const now = new Date();
+        const kstOffset = 9 * 60 * 60 * 1000;
+        const kstDate = new Date(now.getTime() + kstOffset);
+        const month = String(kstDate.getMonth() + 1).padStart(2, '0');
+        const date = String(kstDate.getDate()).padStart(2, '0');
+        return `${month}월 ${date}일`;
+    }
+
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwyzlkpeDPTwbziFoU9ikadhHS_xvCETkNuJ6E3BQA43gxg91dxKKqhCNRWxkl6EF5G/exec';
 
     let quotesData = [];
     let itemsData = [];
+    
+    // 페이지 로드 시 상단 타이틀 세팅
+    document.getElementById('todayTitle').innerText = `📖 ${getTodayFormatted()} 와글의 운세`;
 
     const members = {
         '따란': { team: '생글이', values: ['사랑', '감사', '웃음', '즐거움', '우정'] },
@@ -247,12 +260,12 @@
         '송': { team: '생글이', values: ['자유', '자율성', '이해', '인식', '재미'] },
         '임유월': { team: '생글이', values: ['행복', '기쁨', '방향성', '자유', '참됨'] },
         '윤슬': { team: '생글이', values: ['행복', '즐거움', '목적의식', '여유', '열정'] },
-        '당근': { team: '새침이', values: ['솔직함', '안정', '시도', '자존감', '추진력'] },
-        '써니': { team: '새침이', values: ['행복', '이해', '사랑', '시도', '자존감'] },
-        '동글': { team: '새침이', values: ['성공', '안정', '풍요', '자존감', '행복'] },
-        '구마': { team: '새침이', values: ['행복', '성실', '안정', '확신', '재미'] },
-        '밍보': { team: '새침이', values: ['즐거움', '안정', '자신감', '예의', '규칙'] },
-        '스물': { team: '새침이', values: ['평안', '신뢰', '만족', '자부심', '기쁨'] },
+        '당근': { team: '당당이', values: ['솔직함', '안정', '시도', '자존감', '추진력'] },
+        '써니': { team: '당당이', values: ['행복', '이해', '사랑', '시도', '자존감'] },
+        '동글': { team: '당당이', values: ['성공', '안정', '풍요', '자존감', '행복'] },
+        '구마': { team: '당당이', values: ['행복', '성실', '안정', '확신', '재미'] },
+        '밍보': { team: '당당이', values: ['즐거움', '안정', '자신감', '예의', '규칙'] },
+        '스물': { team: '당당이', values: ['평안', '신뢰', '만족', '자부심', '기쁨'] },
         '최미노': { team: '포근이', values: ['사랑', '책임', '약속', '의리', '한결같음'] },
         '모모': { team: '포근이', values: ['예의', '믿음', '우정', '신뢰', '사랑'] },
         '초록': { team: '포근이', values: ['정직', '끈기', '지지', '성공', '사랑'] },
@@ -272,6 +285,16 @@
         '유재': { team: '불끈이', values: ['정의', '공정', '공존', '존중', '끈기'] },
         '최리': { team: '불끈이', values: ['성공', '안정', '여유', '풍요', '만족'] }
     };
+
+    const tickets = [
+        "🎁 [룰렛 1회 이용권] 획득!",
+        "🎫 [프리덤 연속 1회 채움권] 획득!",
+        "📘 [북큐 1회 채움권] 획득!",
+        "📱 [빙봉에게 카톡하기] 획득!",
+        "🤝 [팀원 1명 모아가기] 획득!",
+        "📖 [직전 책 후기페이지 뽀려가기] 획득!",
+        "☔ [축축이면제권^^] 획득!"
+    ];
 
     // 1. 구글 시트 데이터 가져오기
     async function loadGoogleSheetData() {
@@ -305,6 +328,11 @@
         }
 
         const selectedMember = document.getElementById('memberSelect').value;
+        if (!selectedMember) {
+            alert("✨ 먼저 닉네임을 선택해 주세요!");
+            return;
+        }
+
         const memberInfo = members[selectedMember];
         
         // 오늘 날짜 가져오기 (KST 기준)
@@ -330,6 +358,7 @@
 
         const quoteText = rawQuote.replace(/\\n/g, '<br>').replace(/\n/g, '<br>');
         const itemText = rawItem.replace(/\\n/g, '<br>').replace(/\n/g, '<br>');
+
         // UI 요소 가져오기
         const resultCard = document.getElementById('resultCard');
         const teamBadge = document.getElementById('teamBadge');
@@ -338,16 +367,32 @@
         const quoteMsg = document.getElementById('quoteMsg');
         const keywordMsg = document.getElementById('keywordMsg');
         const itemMsg = document.getElementById('itemMsg');
+        const ticketBox = document.getElementById('ticketBox');
 
         // 값 적용하기 
         teamBadge.innerText = memberInfo.team;
-        resultTitle.innerText = `🔮 ${selectedMember}님의 오늘 운세 🔮`;
+        
+        // 상단 타이틀과 동일한 날짜 형식으로 세팅
+        const dateStr = getTodayFormatted();
+        resultTitle.innerText = `🔮 ${dateStr} ${selectedMember}님의 가치 운세 🔮`;
+        
         valMsg.innerText = `오늘은 '${todayValue}'의 에너지가 당신을 감싸는 하루입니다!`;
         keywordMsg.innerText = `[ ${todayValue} ]`;
         
         // 브라우저가 <br>을 진짜 줄바꿈으로 인식하도록 innerHTML 사용!
         quoteMsg.innerHTML = quoteText; 
         itemMsg.innerHTML = itemText;
+
+        // 💡 약 10% 확률로 럭키 이용권 당첨 로직 (하루에 한 번 고정)
+        const ticketChanceRandom = seededRandom(seed + "_ticketChance");
+        if (ticketChanceRandom < 0.10) {
+            const ticketPickRandom = seededRandom(seed + "_ticketPick");
+            const ticketName = tickets[Math.floor(ticketPickRandom * tickets.length)];
+            document.getElementById('ticketName').innerText = ticketName;
+            ticketBox.style.display = 'block';
+        } else {
+            ticketBox.style.display = 'none';
+        }
 
         // 팀별 테마 클래스 적용 (기존 클래스 덮어쓰기)
         resultCard.className = `result-card theme-${memberInfo.team}`;
